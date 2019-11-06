@@ -15,7 +15,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="hxP-Ez-hjf">
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="hxP-Ez-hjf">
                                 <rect key="frame" x="20" y="245.66666666666666" width="374" height="470.33333333333337"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="1SW-30-ppI">
@@ -41,7 +41,7 @@
                                                 <color key="backgroundColor" red="0.50902348760000005" green="0.50902348760000005" blue="0.50902348760000005" alpha="1" colorSpace="deviceRGB"/>
                                                 <accessibility key="accessibilityConfiguration" label="Reverse sign"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" secondItem="yvB-To-7qX" secondAttribute="height" multiplier="1:1" id="6m1-2V-IWh"/>
+                                                    <constraint firstAttribute="width" secondItem="yvB-To-7qX" secondAttribute="height" multiplier="1:1" priority="500" id="6m1-2V-IWh"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                                 <state key="normal" title="±">
@@ -55,7 +55,7 @@
                                                 <rect key="frame" x="193" y="0.0" width="84.666666666666686" height="84.333333333333329"/>
                                                 <color key="backgroundColor" red="0.50902348760000005" green="0.50902348760000005" blue="0.50902348760000005" alpha="1" colorSpace="deviceRGB"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" secondItem="mWh-HK-zsV" secondAttribute="height" multiplier="1:1" id="UZN-Lz-SbM"/>
+                                                    <constraint firstAttribute="width" secondItem="mWh-HK-zsV" secondAttribute="height" multiplier="1:1" priority="500" id="UZN-Lz-SbM"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                                 <state key="normal" title="%">
@@ -69,7 +69,7 @@
                                                 <rect key="frame" x="289.66666666666669" y="0.0" width="84.333333333333314" height="84.333333333333329"/>
                                                 <color key="backgroundColor" systemColor="systemOrangeColor" red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" secondItem="1s6-mK-A9C" secondAttribute="height" multiplier="1:1" id="fRG-in-YOx"/>
+                                                    <constraint firstAttribute="width" secondItem="1s6-mK-A9C" secondAttribute="height" multiplier="1:1" priority="500" id="fRG-in-YOx"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                                 <state key="normal" title="÷">
@@ -88,7 +88,7 @@
                                                 <rect key="frame" x="0.0" y="0.0" width="84.666666666666671" height="84.666666666666671"/>
                                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" secondItem="f3W-A7-bKI" secondAttribute="height" multiplier="1:1" id="CrB-fA-Kxb"/>
+                                                    <constraint firstAttribute="width" secondItem="f3W-A7-bKI" secondAttribute="height" multiplier="1:1" priority="500" id="CrB-fA-Kxb"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                                 <state key="normal" title="7">
@@ -102,7 +102,7 @@
                                                 <rect key="frame" x="96.666666666666686" y="0.0" width="84.333333333333314" height="84.666666666666671"/>
                                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" secondItem="NIx-n4-PKr" secondAttribute="height" multiplier="1:1" id="tW7-Fo-Hmt"/>
+                                                    <constraint firstAttribute="width" secondItem="NIx-n4-PKr" secondAttribute="height" multiplier="1:1" priority="500" id="tW7-Fo-Hmt"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                                 <state key="normal" title="8">
@@ -116,7 +116,7 @@
                                                 <rect key="frame" x="193" y="0.0" width="84.666666666666686" height="84.666666666666671"/>
                                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" secondItem="MPz-zP-iXP" secondAttribute="height" multiplier="1:1" id="xIH-0X-CIs"/>
+                                                    <constraint firstAttribute="width" secondItem="MPz-zP-iXP" secondAttribute="height" multiplier="1:1" priority="500" id="xIH-0X-CIs"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                                 <state key="normal" title="9">
@@ -130,7 +130,7 @@
                                                 <rect key="frame" x="289.66666666666669" y="0.0" width="84.333333333333314" height="84.666666666666671"/>
                                                 <color key="backgroundColor" systemColor="systemOrangeColor" red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" secondItem="tYg-cV-Opk" secondAttribute="height" multiplier="1:1" id="6Ou-FI-69Q"/>
+                                                    <constraint firstAttribute="width" secondItem="tYg-cV-Opk" secondAttribute="height" multiplier="1:1" priority="500" id="6Ou-FI-69Q"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="32"/>
                                                 <state key="normal" title="×">
@@ -149,7 +149,7 @@
                                                 <rect key="frame" x="0.0" y="0.0" width="84.666666666666671" height="84.333333333333329"/>
                                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" secondItem="0hS-3Y-gve" secondAttribute="height" multiplier="1:1" id="N7X-kg-gHC"/>
+                                                    <constraint firstAttribute="width" secondItem="0hS-3Y-gve" secondAttribute="height" multiplier="1:1" priority="500" id="N7X-kg-gHC"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                                 <state key="normal" title="4">
@@ -163,7 +163,7 @@
                                                 <rect key="frame" x="96.666666666666686" y="0.0" width="84.333333333333314" height="84.333333333333329"/>
                                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" secondItem="FCt-mP-kY3" secondAttribute="height" multiplier="1:1" id="AJN-As-3Nh"/>
+                                                    <constraint firstAttribute="width" secondItem="FCt-mP-kY3" secondAttribute="height" multiplier="1:1" priority="500" id="AJN-As-3Nh"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                                 <state key="normal" title="5">
@@ -177,7 +177,7 @@
                                                 <rect key="frame" x="193" y="0.0" width="84.666666666666686" height="84.333333333333329"/>
                                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" secondItem="jsq-L5-F6e" secondAttribute="height" multiplier="1:1" id="R9T-6U-B0A"/>
+                                                    <constraint firstAttribute="width" secondItem="jsq-L5-F6e" secondAttribute="height" multiplier="1:1" priority="500" id="R9T-6U-B0A"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                                 <state key="normal" title="6">
@@ -191,7 +191,7 @@
                                                 <rect key="frame" x="289.66666666666669" y="0.0" width="84.333333333333314" height="84.333333333333329"/>
                                                 <color key="backgroundColor" systemColor="systemOrangeColor" red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" secondItem="7h1-qt-5ux" secondAttribute="height" multiplier="1:1" id="r6k-0P-nqP"/>
+                                                    <constraint firstAttribute="width" secondItem="7h1-qt-5ux" secondAttribute="height" multiplier="1:1" priority="500" id="r6k-0P-nqP"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="32"/>
                                                 <state key="normal" title="−">
@@ -210,7 +210,7 @@
                                                 <rect key="frame" x="0.0" y="0.0" width="84.666666666666671" height="84.666666666666671"/>
                                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" secondItem="IPj-u8-NYO" secondAttribute="height" multiplier="1:1" id="I4s-xw-fdc"/>
+                                                    <constraint firstAttribute="width" secondItem="IPj-u8-NYO" secondAttribute="height" multiplier="1:1" priority="500" id="I4s-xw-fdc"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                                 <state key="normal" title="1">
@@ -224,7 +224,7 @@
                                                 <rect key="frame" x="96.666666666666686" y="0.0" width="84.333333333333314" height="84.666666666666671"/>
                                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" secondItem="qed-Ch-LfG" secondAttribute="height" multiplier="1:1" id="ZBN-yJ-AHH"/>
+                                                    <constraint firstAttribute="width" secondItem="qed-Ch-LfG" secondAttribute="height" multiplier="1:1" priority="500" id="ZBN-yJ-AHH"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                                 <state key="normal" title="2">
@@ -238,7 +238,7 @@
                                                 <rect key="frame" x="193" y="0.0" width="84.666666666666686" height="84.666666666666671"/>
                                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" secondItem="2gE-QQ-DIh" secondAttribute="height" multiplier="1:1" id="5Vo-1I-Oot"/>
+                                                    <constraint firstAttribute="width" secondItem="2gE-QQ-DIh" secondAttribute="height" multiplier="1:1" priority="500" id="5Vo-1I-Oot"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                                 <state key="normal" title="3">
@@ -261,7 +261,7 @@
                                             </button>
                                         </subviews>
                                         <constraints>
-                                            <constraint firstItem="gZD-ym-D10" firstAttribute="width" secondItem="gZD-ym-D10" secondAttribute="height" multiplier="1:1" id="O2Z-CR-H6p"/>
+                                            <constraint firstItem="gZD-ym-D10" firstAttribute="width" secondItem="gZD-ym-D10" secondAttribute="height" multiplier="1:1" priority="500" id="O2Z-CR-H6p"/>
                                         </constraints>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="Ksg-qM-dO4">
@@ -286,7 +286,7 @@
                                                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <accessibility key="accessibilityConfiguration" label="Decimal place"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="width" secondItem="OTY-1d-ybZ" secondAttribute="height" multiplier="1:1" id="0YM-xg-w4l"/>
+                                                            <constraint firstAttribute="width" secondItem="OTY-1d-ybZ" secondAttribute="height" multiplier="1:1" priority="500" id="0YM-xg-w4l"/>
                                                         </constraints>
                                                         <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                                         <state key="normal" title=".">
@@ -309,15 +309,18 @@
                                                     </button>
                                                 </subviews>
                                                 <constraints>
-                                                    <constraint firstItem="MrG-is-DcD" firstAttribute="width" secondItem="MrG-is-DcD" secondAttribute="height" multiplier="1:1" id="nGX-qH-d2u"/>
+                                                    <constraint firstItem="MrG-is-DcD" firstAttribute="width" secondItem="MrG-is-DcD" secondAttribute="height" multiplier="1:1" priority="500" id="nGX-qH-d2u"/>
                                                 </constraints>
                                             </stackView>
                                         </subviews>
                                     </stackView>
                                 </subviews>
                             </stackView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="YCa-EF-COG" customClass="CopyableLabel" customModule="Calculator" customModuleProvider="target">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="900" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="YCa-EF-COG" customClass="CopyableLabel" customModule="Calculator" customModuleProvider="target">
                                 <rect key="frame" x="20" y="116.33333333333334" width="374" height="109.33333333333334"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="100" id="cHQ-mt-kOp"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="80"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -331,6 +334,7 @@
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="hxP-Ez-hjf" secondAttribute="bottom" constant="20" id="g2J-mK-2D1"/>
                             <constraint firstItem="hxP-Ez-hjf" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="mTf-lt-HaM"/>
                             <constraint firstItem="YCa-EF-COG" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="pHv-U4-7Yd"/>
+                            <constraint firstItem="YCa-EF-COG" firstAttribute="top" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="20" id="uya-0K-xGg"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
