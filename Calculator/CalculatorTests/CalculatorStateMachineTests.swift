@@ -59,7 +59,16 @@ class CalculatorStateMachineTests: XCTestCase {
         XCTAssertEqual(state.updateState(input: .numeral("4")), "2.34")
     }
     
-    // MARK: - Test combinations
+    func testOperatorWithDecimalPlace() {
+        XCTAssertEqual(state.updateState(input: .numeral(".")), "0.")
+        XCTAssertEqual(state.updateState(input: .numeral("2")), "0.2")
+        XCTAssertEqual(state.updateState(input: .dyadic(.plus)), "0.2")
+        XCTAssertEqual(state.updateState(input: .numeral(".")), "0.")
+        XCTAssertEqual(state.updateState(input: .numeral("3")), "0.3")
+        XCTAssertEqual(state.updateState(input: .equals), "0.5")
+    }
+    
+    // MARK: - Test operators
     
     func testBasicAddition() {
         XCTAssertEqual(state.updateState(input: .numeral("8")), "8")
@@ -67,6 +76,32 @@ class CalculatorStateMachineTests: XCTestCase {
         XCTAssertEqual(state.updateState(input: .numeral("4")), "4")
         XCTAssertEqual(state.updateState(input: .equals), "12")
     }
+    
+    func testBasicSubtraction() {
+        XCTAssertEqual(state.updateState(input: .numeral("8")), "8")
+        XCTAssertEqual(state.updateState(input: .dyadic(.minus)), "8")
+        XCTAssertEqual(state.updateState(input: .numeral("4")), "4")
+        XCTAssertEqual(state.updateState(input: .equals), "4")
+    }
+    
+    func testBasicMultiplication() {
+        XCTAssertEqual(state.updateState(input: .numeral("8")), "8")
+        XCTAssertEqual(state.updateState(input: .dyadic(.multiply)), "8")
+        XCTAssertEqual(state.updateState(input: .numeral("4")), "4")
+        XCTAssertEqual(state.updateState(input: .equals), "32")
+    }
+    
+    func testBasicDivision() {
+        XCTAssertEqual(state.updateState(input: .numeral("8")), "8")
+        XCTAssertEqual(state.updateState(input: .dyadic(.divide)), "8")
+        XCTAssertEqual(state.updateState(input: .numeral("4")), "4")
+        XCTAssertEqual(state.updateState(input: .equals), "2")
+    }
+    
+    
+    // MARK: - Test combinations
+    
+
     
     func testRunOnAddition() {
         XCTAssertEqual(state.updateState(input: .numeral("8")), "8")
@@ -92,6 +127,25 @@ class CalculatorStateMachineTests: XCTestCase {
         XCTAssertEqual(state.updateState(input: .numeral("8")), "8")
         XCTAssertEqual(state.updateState(input: .equals), "8")
         XCTAssertEqual(state.updateState(input: .equals), "16")
+    }
+    
+    // MARK: - Clear
+    
+    func testEmptyClear() {
+        XCTAssertEqual(state.updateState(input: .clear), "0")
+    }
+    
+    func testClearNumber() {
+        XCTAssertEqual(state.updateState(input: .numeral("2")), "2")
+        XCTAssertEqual(state.updateState(input: .clear), "0")
+    }
+    
+    // MARK: - Reverse sign
+    
+    func testReverseSign() {
+        XCTAssertEqual(state.updateState(input: .numeral("2")), "2")
+        XCTAssertEqual(state.updateState(input: .reverseSign), "-2")
+        XCTAssertEqual(state.updateState(input: .reverseSign), "2")
     }
 
 }

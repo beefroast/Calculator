@@ -99,8 +99,20 @@ class CalculatorStateMachine {
             return result
              
          case .inputtedDyadic(let previousNumber, let op):
-            self.state = .inputtingSecondNumber(previousNumber, op, numeral)
-            return numeral
+            
+            switch numeral {
+                
+            case "0":
+                 return numeral
+                 
+             case ".":
+                self.state = .inputtingSecondNumber(previousNumber, op, "0.")
+                return "0."
+                 
+             default:
+                 self.state = .inputtingSecondNumber(previousNumber, op, numeral)
+                 return numeral   
+            }
              
          case .inputtingSecondNumber(let previousNumber, let op, let currentNum):
             let result = currentNum + numeral
@@ -179,24 +191,42 @@ class CalculatorStateMachine {
             return "0"
 
         case .inputtingFirstNumber(let a):
+            
+            guard a != "0." else {
+                // -0 is the same as zero, so we're still awaiting input
+                self.state = .awaitingInput
+                return "0"
+            }
+            
             let result = a.withLeadingMinusSignToggled()
-            self.state = .inputtingFirstNumber(a)
-            return a
+            self.state = .inputtingFirstNumber(result)
+            return result
 
         case .inputtedDyadic(let a, let op):
-            let result =
-            self.state = .inputtedDyadic(a.withLeadingMinusSignToggled(), op)
+            let result = a.withLeadingMinusSignToggled()
+            self.state = .inputtedDyadic(result, op)
+            return result
 
         case .inputtingSecondNumber(let a, let op, let b):
-            self.state = .inputtingSecondNumber(a, op, b.withLeadingMinusSignToggled())
+            
+            guard b != "0." else {
+                // -0 is the same as zero, so we're still awaiting input
+                self.state = .inputtedDyadic(a, op)
+                return "0"
+            }
+            
+            let result = b.withLeadingMinusSignToggled()
+            self.state = .inputtingSecondNumber(a, op, result)
+            return result
 
         case .showingResult(let a, let op, let b):
-            self.state = .inputtingSecondNumber(a, op, b.withLeadingMinusSignToggled())
-
+            let result = a.withLeadingMinusSignToggled()
+            self.state = .inputtingSecondNumber(result, op, b)
+            return result
         }
         
-        return ""
     }
+    
     
     private func handlePercent() -> String {
         
