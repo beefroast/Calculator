@@ -1,5 +1,5 @@
 //
-//  CalculatorTests.swift
+//  CalculatorStateMachineTests.swift
 //  CalculatorTests
 //
 //  Created by Benjamin Frost on 6/11/19.
@@ -9,10 +9,12 @@
 import XCTest
 @testable import Calculator
 
-class CalculatorTests: XCTestCase {
+class CalculatorStateMachineTests: XCTestCase {
 
+    var state = CalculatorStateMachine()
+    
     override func setUp() {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        self.state = CalculatorStateMachine()
     }
 
     override func tearDown() {
