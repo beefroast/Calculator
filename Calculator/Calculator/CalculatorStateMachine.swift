@@ -309,8 +309,33 @@ class CalculatorStateMachine {
     }
     
     private func handleClear() -> CalculatorStateMachineOutput {
-        self.state = .awaitingInput
-        return CalculatorStateMachineOutput(display: "0")
+        
+        switch self.state {
+            
+        case .error:
+            self.state = .awaitingInput
+            return CalculatorStateMachineOutput(display: "0")
+            
+        case .awaitingInput:
+            return CalculatorStateMachineOutput(display: "0")
+            
+        case .inputtingFirstNumber(_):
+            self.state = .awaitingInput
+            return CalculatorStateMachineOutput(display: "0")
+            
+        case .inputtedDyadic(let a, _):
+            self.state = .inputtingFirstNumber(a)
+            return CalculatorStateMachineOutput(display: a)
+            
+        case .inputtingSecondNumber(let a, let op, _):
+            self.state = .inputtedDyadic(a, op)
+            return CalculatorStateMachineOutput(display: "0")
+            
+        case .showingResult(_, _, _):
+            return CalculatorStateMachineOutput(display: "0")
+            
+        }
+
     }
     
     
