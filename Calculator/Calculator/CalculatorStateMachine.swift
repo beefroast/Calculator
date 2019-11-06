@@ -180,7 +180,8 @@ class CalculatorStateMachine {
     }
     
     private func handleClear() -> String {
-        fatalError()
+        self.state = .awaitingInput
+        return "0"
     }
     
     
