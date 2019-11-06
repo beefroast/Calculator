@@ -176,7 +176,33 @@ class CalculatorStateMachine {
     }
     
     private func handleEquals() -> String {
-        fatalError()
+        switch self.state {
+        
+        case .error:
+            return "Error"
+        
+        case .awaitingInput:
+            return "0"
+            
+        case .inputtingFirstNumber(let num):
+            return num
+            
+        case .inputtedDyadic(let a, let dyadic):
+            let result = self.performOperation(a: a, b: a, dyadic: dyadic)
+            self.state = .showingResult(a, dyadic, result)
+            return result
+            
+        case .inputtingSecondNumber(let a, let op, let b):
+            let result = self.performOperation(a: a, b: b, dyadic: op)
+            self.state = .showingResult(result, op, b)
+            return result
+            
+        case .showingResult(let a, let op, let b):
+            let result = self.performOperation(a: a, b: b, dyadic: op)
+            self.state = .showingResult(result, op, b)
+            return result
+            
+        }
     }
     
     private func handleClear() -> String {

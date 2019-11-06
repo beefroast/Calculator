@@ -59,7 +59,7 @@ class CalculatorViewController: UIViewController {
     }
     
     @IBAction func onEqualsPressed(_ sender: Any) {
-        self.updateState(input: .clear)
+        self.updateState(input: .equals)
     }
 }
 
