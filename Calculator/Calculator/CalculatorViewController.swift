@@ -25,8 +25,6 @@ class CalculatorViewController: UIViewController {
     
     // MARK: - IBActions
     
-    
-    
     @IBAction func onNumeralPressed(_ sender: UIButton) {
         guard let numeral = sender.titleLabel?.text else { return }
         self.updateState(input: .numeral(numeral))
@@ -49,15 +47,19 @@ class CalculatorViewController: UIViewController {
     }
     
     @IBAction func onMultiplyPressed(_ sender: Any) {
+        self.updateState(input: .dyadic(.multiply))
     }
     
     @IBAction func onMinusPressed(_ sender: Any) {
+        self.updateState(input: .dyadic(.minus))
     }
     
-    @IBAction func onAdditionPressed(_ sender: Any) {
+    @IBAction func onDividePressed(_ sender: Any) {
+        self.updateState(input: .dyadic(.divide))
     }
     
     @IBAction func onEqualsPressed(_ sender: Any) {
+        self.updateState(input: .clear)
     }
 }
 

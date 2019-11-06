@@ -74,7 +74,7 @@
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </state>
                                                 <connections>
-                                                    <action selector="onPlusPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ife-pG-hgQ"/>
+                                                    <action selector="onDividePressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Ryu-Mt-QkS"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -255,6 +255,7 @@
                                                 </state>
                                                 <connections>
                                                     <action selector="onAdditionPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="j7v-gr-1Wk"/>
+                                                    <action selector="onPlusPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="W4b-VX-Hmr"/>
                                                 </connections>
                                             </button>
                                         </subviews>
