@@ -34,7 +34,7 @@ class CalculatorStateMachineTests: XCTestCase {
         XCTAssertEqual(state.updateState(input: .numeral("0")), "0")
         XCTAssertEqual(state.updateState(input: .numeral("0")), "0")
         XCTAssertEqual(state.updateState(input: .numeral("2")), "2")
-        XCTAssertEqual(state.updateState(input: .numeral("0")), "0")
+        XCTAssertEqual(state.updateState(input: .numeral("0")), "20")
     }
     
     // MARK: - Decimal places

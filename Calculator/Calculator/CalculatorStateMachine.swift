@@ -72,10 +72,28 @@ class CalculatorStateMachine {
             return "Error"
          
          case .awaitingInput:
-            self.state = .inputtingFirstNumber(numeral)
-            return numeral
+            
+            switch numeral {
+            
+            case "0":
+                return numeral
+                
+            case ".":
+                self.state = .inputtingFirstNumber("0.")
+                return "0."
+                
+            default:
+                self.state = .inputtingFirstNumber(numeral)
+                return numeral
+                
+            }
              
          case .inputtingFirstNumber(let currentNum):
+            
+            guard (currentNum.contains(".") && numeral == ".") == false else {
+                return currentNum
+            }
+            
             let result = currentNum + numeral
             self.state = .inputtingFirstNumber(result)
             return result
