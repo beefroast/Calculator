@@ -152,34 +152,65 @@ class CalculatorStateMachine {
     
     private func handleReverseSign() -> String {
         
-//        switch state {
-//
-//        case .error:
-//            return "Error"
-//
-//        case .awaitingInput:
-//            return "0"
-//
-//        case .inputtingFirstNumber(let a):
-//            self.state = .inputtingFirstNumber(a.withLeadingMinusSignToggled())
-//            return
-//
-//        case .inputtedDyadic(let a, let op):
-//            self.state = .inputtedDyadic(a.withLeadingMinusSignToggled(), op)
-//
-//        case .inputtingSecondNumber(let a, let op, let b):
-//            self.state = .inputtingSecondNumber(a, op, b.withLeadingMinusSignToggled())
-//
-//        case .showingResult(let a, let op, let b):
-//            self.state = .inputtingSecondNumber(a, op, b.withLeadingMinusSignToggled())
-//
-//        }
+        switch state {
+
+        case .error:
+            return "Error"
+
+        case .awaitingInput:
+            return "0"
+
+        case .inputtingFirstNumber(let a):
+            let result = a.withLeadingMinusSignToggled()
+            self.state = .inputtingFirstNumber(a)
+            return a
+
+        case .inputtedDyadic(let a, let op):
+            let result =
+            self.state = .inputtedDyadic(a.withLeadingMinusSignToggled(), op)
+
+        case .inputtingSecondNumber(let a, let op, let b):
+            self.state = .inputtingSecondNumber(a, op, b.withLeadingMinusSignToggled())
+
+        case .showingResult(let a, let op, let b):
+            self.state = .inputtingSecondNumber(a, op, b.withLeadingMinusSignToggled())
+
+        }
         
         return ""
     }
     
     private func handlePercent() -> String {
-        fatalError()
+        
+        switch self.state {
+            
+        case .error:
+            return "Error"
+            
+        case .awaitingInput:
+            return "0"
+            
+        case .inputtingFirstNumber(let a):
+            let result = self.performOperation(a: a, b: "100", dyadic: .divide)
+            self.state = .inputtingFirstNumber(result)
+            return result
+            
+        case .inputtedDyadic(let a, let op):
+            let percent = self.performOperation(a: a, b: "100", dyadic: .divide)
+            let result = self.performOperation(a: a, b: percent, dyadic: .multiply)
+            self.state = .inputtedDyadic(result, op)
+            return result
+            
+        case .inputtingSecondNumber(let a, let op, let b):
+            self.state = .error
+            return "Error"
+            
+        case .showingResult(let a, let op, let b):
+            self.state = .error
+            return "Error"
+            
+        }
+        
     }
     
     private func handleEquals() -> String {
