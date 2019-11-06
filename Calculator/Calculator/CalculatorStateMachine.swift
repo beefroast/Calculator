@@ -111,7 +111,7 @@ class CalculatorStateMachine {
                  
              default:
                  self.state = .inputtingSecondNumber(previousNumber, op, numeral)
-                 return numeral   
+                 return numeral
             }
              
          case .inputtingSecondNumber(let previousNumber, let op, let currentNum):
