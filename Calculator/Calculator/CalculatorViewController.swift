@@ -8,38 +8,66 @@
 
 import UIKit
 
-enum Operator {
-    case plus
-    case minus
-    case multiply
-    case divide
-    case equals
-    case clear
-    case plusOrMinus
-    case percent
-}
+
+
+
 
 
 class CalculatorViewController: UIViewController {
-        
+    
     @IBOutlet weak var labelOutput: UILabel?
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
+    var state = CalculatorStateMachine()
+    
+    private func updateState(input: CalculatorInput) {
+        self.labelOutput?.text = self.state.updateState(input: input)
     }
     
     // MARK: - IBActions
     
+    
+    
     @IBAction func onNumeralPressed(_ sender: UIButton) {
-        
         guard let numeral = sender.titleLabel?.text else { return }
-
-        
-        
+        self.updateState(input: .numeral(numeral))
     }
     
+    @IBAction func onClearPressed(_ sender: Any) {
+        self.updateState(input: .clear)
+    }
+    
+    @IBAction func onReverseSignPressed(_ sender: Any) {
+        self.updateState(input: .reverseSign)
+    }
+    
+    @IBAction func onPercentPressed(_ sender: Any) {
+        self.updateState(input: .percent)
+    }
+    
+    @IBAction func onPlusPressed(_ sender: Any) {
+        self.updateState(input: .dyadic(.plus))
+    }
+    
+    @IBAction func onMultiplyPressed(_ sender: Any) {
+    }
+    
+    @IBAction func onMinusPressed(_ sender: Any) {
+    }
+    
+    @IBAction func onAdditionPressed(_ sender: Any) {
+    }
+    
+    @IBAction func onEqualsPressed(_ sender: Any) {
+    }
+}
 
-
+extension String {
+    func withLeadingMinusSignToggled() -> String {
+        if self.prefix(1) == "-" {
+            return String(self.suffix(1))
+        } else {
+            return "-" + self
+        }
+    }
 }
 
