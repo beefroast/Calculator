@@ -16,14 +16,31 @@ import UIKit
 class CalculatorViewController: UIViewController {
     
     @IBOutlet weak var labelOutput: UILabel?
+    @IBOutlet weak var clearButton: UIButton?
+    @IBOutlet weak var plusButton: UIButton?
+    @IBOutlet weak var minusButton: UIButton?
+    @IBOutlet weak var multiplyButton: UIButton?
+    @IBOutlet weak var divideButton: UIButton?
     
     var state = CalculatorStateMachine()
     
     private func updateState(input: CalculatorInput) {
+        
         let newState = self.state.updateState(input: input)
         
+        // Update the display
         self.labelOutput?.text = newState.display
         
+        // Update the clear button label
+        self.clearButton?.setTitle(newState.clearButtonText, for: [.normal, .highlighted])
+        
+        // Update the operators selected state
+        self.plusButton?.isSelected = newState.highlightedButton == .some(.plus)
+        self.minusButton?.isSelected = newState.highlightedButton == .some(.minus)
+        self.multiplyButton?.isSelected = newState.highlightedButton == .some(.multiply)
+        self.divideButton?.isSelected = newState.highlightedButton == .some(.divide)
+        
+        // Post a notification reading the display for a user using VoiceOver
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.2) {
             UIAccessibility.post(
                 notification: UIAccessibility.Notification.announcement,
