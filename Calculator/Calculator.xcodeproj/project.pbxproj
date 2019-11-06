@@ -15,6 +15,7 @@
 		64DC2BDF237293C400084825 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 64DC2BDD237293C400084825 /* LaunchScreen.storyboard */; };
 		64DC2BEA237293C500084825 /* CalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64DC2BE9237293C500084825 /* CalculatorTests.swift */; };
 		64DC2BF5237293C500084825 /* CalculatorUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64DC2BF4237293C500084825 /* CalculatorUITests.swift */; };
+		64DC2C0323729A2B00084825 /* RoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64DC2C0223729A2B00084825 /* RoundedButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		64DC2BF0237293C500084825 /* CalculatorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CalculatorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		64DC2BF4237293C500084825 /* CalculatorUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorUITests.swift; sourceTree = "<group>"; };
 		64DC2BF6237293C500084825 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		64DC2C0223729A2B00084825 /* RoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +108,7 @@
 				64DC2BDB237293C400084825 /* Assets.xcassets */,
 				64DC2BDD237293C400084825 /* LaunchScreen.storyboard */,
 				64DC2BE0237293C400084825 /* Info.plist */,
+				64DC2C0223729A2B00084825 /* RoundedButton.swift */,
 			);
 			path = Calculator;
 			sourceTree = "<group>";
@@ -262,6 +265,7 @@
 				64DC2BD7237293C300084825 /* ViewController.swift in Sources */,
 				64DC2BD3237293C300084825 /* AppDelegate.swift in Sources */,
 				64DC2BD5237293C300084825 /* SceneDelegate.swift in Sources */,
+				64DC2C0323729A2B00084825 /* RoundedButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
