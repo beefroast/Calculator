@@ -20,7 +20,15 @@ class CalculatorViewController: UIViewController {
     var state = CalculatorStateMachine()
     
     private func updateState(input: CalculatorInput) {
-        self.labelOutput?.text = self.state.updateState(input: input)
+        let newDisplayedOutput = self.state.updateState(input: input)
+        self.labelOutput?.text = newDisplayedOutput
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.2) {
+            UIAccessibility.post(
+                notification: UIAccessibility.Notification.announcement,
+                argument: newDisplayedOutput
+            )
+        }
     }
     
     // MARK: - IBActions
