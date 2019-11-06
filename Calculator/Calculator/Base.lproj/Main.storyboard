@@ -532,7 +532,12 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="clearButton" destination="2e9-7X-2Dr" id="vbG-nv-3gS"/>
+                        <outlet property="divideButton" destination="1s6-mK-A9C" id="9SE-F1-lPu"/>
                         <outlet property="labelOutput" destination="YCa-EF-COG" id="HxT-hN-SKw"/>
+                        <outlet property="minusButton" destination="7h1-qt-5ux" id="LZG-HB-ENa"/>
+                        <outlet property="multiplyButton" destination="tYg-cV-Opk" id="YmD-Ni-DmX"/>
+                        <outlet property="plusButton" destination="gZD-ym-D10" id="hFO-bY-sK5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

@@ -120,21 +120,21 @@ class CalculatorStateMachine {
             switch numeral {
                 
             case "0":
-                return CalculatorStateMachineOutput(display: numeral)
+                return CalculatorStateMachineOutput(display: numeral, clearButtonText: "C", highlightedButton: op)
                  
              case ".":
                 self.state = .inputtingSecondNumber(previousNumber, op, "0.")
-                return CalculatorStateMachineOutput(display: "0.")
+                return CalculatorStateMachineOutput(display: "0.", clearButtonText: "C", highlightedButton: op)
                  
              default:
                  self.state = .inputtingSecondNumber(previousNumber, op, numeral)
-                 return CalculatorStateMachineOutput(display: numeral)
+                 return CalculatorStateMachineOutput(display: numeral, clearButtonText: "C", highlightedButton: op)
             }
              
          case .inputtingSecondNumber(let previousNumber, let op, let currentNum):
             let result = currentNum + numeral
             self.state = .inputtingSecondNumber(previousNumber, op, result)
-            return CalculatorStateMachineOutput(display: result)
+            return CalculatorStateMachineOutput(display: result, clearButtonText: "C", highlightedButton: op)
              
          case .showingResult(_, _, _):
              self.state = .inputtingFirstNumber(numeral)
@@ -149,20 +149,20 @@ class CalculatorStateMachine {
              
          case .awaitingInput:
             self.state = .inputtedDyadic("0", dyadic)
-            return CalculatorStateMachineOutput(display: "0")
+            return CalculatorStateMachineOutput(display: "0", clearButtonText: "C", highlightedButton: dyadic)
              
          case .inputtingFirstNumber(let a):
             self.state = .inputtedDyadic(a, dyadic)
-            return CalculatorStateMachineOutput(display: a)
+            return CalculatorStateMachineOutput(display: a, clearButtonText: "C", highlightedButton: dyadic)
              
          case .inputtedDyadic(let a, let op):
              self.state = .inputtedDyadic(a, dyadic)
-            return CalculatorStateMachineOutput(display: a)
+            return CalculatorStateMachineOutput(display: a, clearButtonText: "C", highlightedButton: dyadic)
              
          case .inputtingSecondNumber(let a, let op, let b):
             let calculatedValue = self.performOperation(a: a, b: b, dyadic: op)
             self.state = .inputtedDyadic(calculatedValue, dyadic)
-            return CalculatorStateMachineOutput(display: calculatedValue)
+            return CalculatorStateMachineOutput(display: calculatedValue, clearButtonText: "C", highlightedButton: dyadic)
              
          case .showingResult(let a, _, let b):
             self.state = .inputtedDyadic(a, dyadic)
