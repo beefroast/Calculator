@@ -140,6 +140,15 @@ class CalculatorStateMachineTests: XCTestCase {
         XCTAssertEqual(state.updateState(input: .clear).display, "0")
     }
     
+    func testClearingCurrentNumber() {
+        XCTAssertEqual(state.updateState(input: .numeral("2")).display, "2")
+        XCTAssertEqual(state.updateState(input: .dyadic(.plus)).display, "2")
+        XCTAssertEqual(state.updateState(input: .numeral("7")).display, "7")
+        XCTAssertEqual(state.updateState(input: .clear).display, "0")
+        XCTAssertEqual(state.updateState(input: .numeral("9")).display, "9")
+        XCTAssertEqual(state.updateState(input: .equals).display, "11")
+    }
+    
     // MARK: - Reverse sign
     
     func testReverseSign() {
