@@ -80,6 +80,9 @@
                                                 <state key="normal" title="7">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </state>
+                                                <connections>
+                                                    <action selector="onNumeralPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="RNO-mG-4Hd"/>
+                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NIx-n4-PKr" customClass="RoundedButton" customModule="Calculator" customModuleProvider="target">
                                                 <rect key="frame" x="96.666666666666686" y="0.0" width="84.333333333333314" height="84.666666666666671"/>
@@ -91,6 +94,9 @@
                                                 <state key="normal" title="8">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </state>
+                                                <connections>
+                                                    <action selector="onNumeralPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9tX-88-Wzh"/>
+                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MPz-zP-iXP" customClass="RoundedButton" customModule="Calculator" customModuleProvider="target">
                                                 <rect key="frame" x="193" y="0.0" width="84.666666666666686" height="84.666666666666671"/>
@@ -102,6 +108,9 @@
                                                 <state key="normal" title="9">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </state>
+                                                <connections>
+                                                    <action selector="onNumeralPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="INO-G8-YXY"/>
+                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tYg-cV-Opk" customClass="RoundedButton" customModule="Calculator" customModuleProvider="target">
                                                 <rect key="frame" x="289.66666666666669" y="0.0" width="84.333333333333314" height="84.666666666666671"/>
@@ -129,6 +138,9 @@
                                                 <state key="normal" title="4">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </state>
+                                                <connections>
+                                                    <action selector="onNumeralPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="W9C-A3-OgY"/>
+                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FCt-mP-kY3" customClass="RoundedButton" customModule="Calculator" customModuleProvider="target">
                                                 <rect key="frame" x="96.666666666666686" y="0.0" width="84.333333333333314" height="84.333333333333329"/>
@@ -140,6 +152,9 @@
                                                 <state key="normal" title="5">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </state>
+                                                <connections>
+                                                    <action selector="onNumeralPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="NFZ-Um-Pkp"/>
+                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jsq-L5-F6e" customClass="RoundedButton" customModule="Calculator" customModuleProvider="target">
                                                 <rect key="frame" x="193" y="0.0" width="84.666666666666686" height="84.333333333333329"/>
@@ -151,6 +166,9 @@
                                                 <state key="normal" title="6">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </state>
+                                                <connections>
+                                                    <action selector="onNumeralPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="6iW-B9-eaF"/>
+                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7h1-qt-5ux" customClass="RoundedButton" customModule="Calculator" customModuleProvider="target">
                                                 <rect key="frame" x="289.66666666666669" y="0.0" width="84.333333333333314" height="84.333333333333329"/>
@@ -178,6 +196,9 @@
                                                 <state key="normal" title="1">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </state>
+                                                <connections>
+                                                    <action selector="onNumeralPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="DMo-di-WVg"/>
+                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qed-Ch-LfG" customClass="RoundedButton" customModule="Calculator" customModuleProvider="target">
                                                 <rect key="frame" x="96.666666666666686" y="0.0" width="84.333333333333314" height="84.666666666666671"/>
@@ -189,6 +210,9 @@
                                                 <state key="normal" title="2">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </state>
+                                                <connections>
+                                                    <action selector="onNumeralPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="eU9-SS-deL"/>
+                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2gE-QQ-DIh" customClass="RoundedButton" customModule="Calculator" customModuleProvider="target">
                                                 <rect key="frame" x="193" y="0.0" width="84.666666666666686" height="84.666666666666671"/>
@@ -200,6 +224,9 @@
                                                 <state key="normal" title="3">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </state>
+                                                <connections>
+                                                    <action selector="onNumeralPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="UTQ-Es-2M6"/>
+                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gZD-ym-D10" customClass="RoundedButton" customModule="Calculator" customModuleProvider="target">
                                                 <rect key="frame" x="289.66666666666669" y="0.0" width="84.333333333333314" height="84.666666666666671"/>
@@ -224,6 +251,9 @@
                                                 <state key="normal" title="0">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </state>
+                                                <connections>
+                                                    <action selector="onNumeralPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="RGY-nH-QQq"/>
+                                                </connections>
                                             </button>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="MPX-2v-zFk">
                                                 <rect key="frame" x="193" y="0.0" width="181" height="84.333333333333329"/>
@@ -274,6 +304,9 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <connections>
+                        <outlet property="labelOutput" destination="YCa-EF-COG" id="HxT-hN-SKw"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>

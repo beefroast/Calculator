@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6409860D2372A1210073D2E0 /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6409860C2372A1210073D2E0 /* Stack.swift */; };
 		64DC2BD3237293C300084825 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64DC2BD2237293C300084825 /* AppDelegate.swift */; };
 		64DC2BD5237293C300084825 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64DC2BD4237293C300084825 /* SceneDelegate.swift */; };
 		64DC2BD7237293C300084825 /* CalculatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64DC2BD6237293C300084825 /* CalculatorViewController.swift */; };
@@ -36,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6409860C2372A1210073D2E0 /* Stack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
 		64DC2BCF237293C300084825 /* Calculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Calculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		64DC2BD2237293C300084825 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		64DC2BD4237293C300084825 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -104,6 +106,7 @@
 				64DC2BD2237293C300084825 /* AppDelegate.swift */,
 				64DC2BD4237293C300084825 /* SceneDelegate.swift */,
 				64DC2BD6237293C300084825 /* CalculatorViewController.swift */,
+				6409860C2372A1210073D2E0 /* Stack.swift */,
 				64DC2BD8237293C300084825 /* Main.storyboard */,
 				64DC2BDB237293C400084825 /* Assets.xcassets */,
 				64DC2BDD237293C400084825 /* LaunchScreen.storyboard */,
@@ -263,6 +266,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				64DC2BD7237293C300084825 /* CalculatorViewController.swift in Sources */,
+				6409860D2372A1210073D2E0 /* Stack.swift in Sources */,
 				64DC2BD3237293C300084825 /* AppDelegate.swift in Sources */,
 				64DC2BD5237293C300084825 /* SceneDelegate.swift in Sources */,
 				64DC2C0323729A2B00084825 /* RoundedButton.swift in Sources */,
