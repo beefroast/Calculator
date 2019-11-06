@@ -113,13 +113,13 @@ class CalculatorStateMachine {
             return a
              
          case .inputtingSecondNumber(let a, let op, let b):
-            let calculatedValue = self.performOperation(a: a, b: b, dyadic: dyadic)
-            self.state = .showingResult(calculatedValue, op, b)
+            let calculatedValue = self.performOperation(a: a, b: b, dyadic: op)
+            self.state = .inputtedDyadic(calculatedValue, dyadic)
             return calculatedValue
              
          case .showingResult(let a, _, let b):
-            self.state = .inputtedDyadic(b, dyadic)
-            return b
+            self.state = .inputtedDyadic(a, dyadic)
+            return a
             
          case .error:
             return "Error"
@@ -128,10 +128,17 @@ class CalculatorStateMachine {
     }
     
     private func performOperation(a: String, b: String, dyadic: DyadicOperator) -> String {
-        // TODO: Conversion needs to be better so we don't get weird
-        // floating point number inaccuracies
+        
+        // TODO: Conversions could be better
         let value = self.performOperation(a: Double(a)!, b: Double(b)!, dyadic: dyadic)
-        return String(value)
+        let stringValue = String(value)
+        
+        // Remove the trailing .0 if we've got an integer value
+        if stringValue.suffix(2) == ".0" {
+            return String(stringValue.dropLast(2))
+        } else {
+            return stringValue
+        }
     }
     
     private func performOperation(a: Double, b: Double, dyadic: DyadicOperator) -> Double {
@@ -189,7 +196,7 @@ class CalculatorStateMachine {
             
         case .inputtedDyadic(let a, let dyadic):
             let result = self.performOperation(a: a, b: a, dyadic: dyadic)
-            self.state = .showingResult(a, dyadic, result)
+            self.state = .showingResult(result, dyadic, a)
             return result
             
         case .inputtingSecondNumber(let a, let op, let b):
