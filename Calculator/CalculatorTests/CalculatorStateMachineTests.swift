@@ -148,4 +148,31 @@ class CalculatorStateMachineTests: XCTestCase {
         XCTAssertEqual(state.updateState(input: .reverseSign).display, "2")
     }
 
+    
+    
+    // MARK: - Test Highlighting
+    
+    func testOperatorIsHighlighted() {
+        XCTAssertEqual(state.updateState(input: .dyadic(.plus)).highlightedButton, .plus)
+        XCTAssertEqual(state.updateState(input: .dyadic(.minus)).highlightedButton, .minus)
+        XCTAssertEqual(state.updateState(input: .dyadic(.multiply)).highlightedButton, .multiply)
+        XCTAssertEqual(state.updateState(input: .dyadic(.divide)).highlightedButton, .divide)
+    }
+    
+    func testOperatorIsHighlightedUntilEquals() {
+        XCTAssertEqual(state.updateState(input: .numeral("2")).highlightedButton, nil)
+        XCTAssertEqual(state.updateState(input: .dyadic(.plus)).highlightedButton, .plus)
+        XCTAssertEqual(state.updateState(input: .numeral("2")).highlightedButton, .plus)
+        XCTAssertEqual(state.updateState(input: .equals).highlightedButton, nil)
+    }
+    
+    func testRunonOperatorHighlighting() {
+        XCTAssertEqual(state.updateState(input: .numeral("2")).highlightedButton, nil)
+        XCTAssertEqual(state.updateState(input: .dyadic(.plus)).highlightedButton, .plus)
+        XCTAssertEqual(state.updateState(input: .numeral("2")).highlightedButton, .plus)
+        XCTAssertEqual(state.updateState(input: .dyadic(.minus)).highlightedButton, .minus)
+        XCTAssertEqual(state.updateState(input: .numeral("1")).highlightedButton, .minus)
+        XCTAssertEqual(state.updateState(input: .equals).highlightedButton, nil)
+    }
+    
 }
