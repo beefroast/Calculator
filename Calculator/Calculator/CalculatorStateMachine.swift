@@ -10,37 +10,51 @@ import Foundation
 
 
 
-
+/// Implementation of ICalculator that uses a state machine structure to process input events
 class CalculatorStateMachine: ICalculator {
     
+    /// Represents an error in the calculator state machine.
     enum CalculatorError: Error {
+        
+        /// An input to the state machine was invalid.
         case invalidInput
+        
+        /// Division by zero was attempted.
         case divisionByZero
     }
     
+    
+    /// The possible states of the CalculatorStateMachine
     enum CalculatorState {
         
-        // The calculator has attempted to divide by zero, or some other error has occured
+        /// Error state representing bad input or division by zero
         case error
         
-        // We've inputted nothing, so we're awaiting input
+        /// Nothing has been inputted by the user
         case awaitingInput
         
-        // We're inputting our first number
+        /// The user is inputting their first numerical value
         case inputtingFirstNumber(String)
         
-        // We've inputted a number and a dyadic operator
+        /// The user has inputted a numerical value and a dyadic operator
         case inputtedDyadic(String, DyadicOperator)
         
-        // We're inputting our second number
+        /// The user has inputted a numerical value and a dyadic operator, and is inputting a second number.
         case inputtingSecondNumber(String, DyadicOperator, String)
         
-        // We're showing the result of a calculation with a dyadic operator
+        /// Showing the result of a calculation with the given values and dyadic operator.
         case showingResult(String, DyadicOperator, String)
     }
     
+    /// The state of the state machine
     private var state = CalculatorState.awaitingInput
     
+    
+    /**
+       Updates the state of the calculator
+       - Parameter input: The input into the calculator.
+       - Returns: a `CalculatorOutput` representing the displayable state of the calculator.
+    */
     func updateState(input: CalculatorInput) -> CalculatorOutput {
     
         do {
@@ -58,6 +72,11 @@ class CalculatorStateMachine: ICalculator {
         }
     }
     
+    /**
+        Handler for numerical input.
+       - Parameter numeral: The numeral that was inputted.
+       - Returns: a `CalculatorOutput` representing the displayable state of the calculator.
+    */
     private func handle(numeral: String) -> CalculatorOutput {
         
         switch self.state {
@@ -122,6 +141,11 @@ class CalculatorStateMachine: ICalculator {
          }
     }
     
+    /**
+        Handler for dyadic operator  input.
+       - Parameter dyadic: The operator that was inputted
+       - Returns: a `CalculatorOutput` representing the displayable state of the calculator.
+    */
     private func handle(dyadic: DyadicOperator) throws -> CalculatorOutput {
         
          switch state {
@@ -153,6 +177,14 @@ class CalculatorStateMachine: ICalculator {
          }
     }
     
+    /**
+        Performs a dyadic operator on the given inputs and returns the result.
+        - Parameter a: The left hand side of the equation.
+        - Parameter a: The right hand side of the equation.
+        - Returns: a `CalculatorOutput` representing the displayable state of the calculator.
+        - Throws: `CalculatorError.invalidInput` if either of the strings cannot be parsed as numbers.
+        - Throws: `CalculatorError.divisionByZero` if division by zero was to be performed.
+    */
     private func performOperation(a: String, b: String, dyadic: DyadicOperator) throws -> String {
         
         // TODO: Conversions could be better
@@ -171,6 +203,14 @@ class CalculatorStateMachine: ICalculator {
         }
     }
     
+    /**
+        Performs a dyadic operator on the given inputs and returns the result.
+        - Parameter a: The left hand side of the equation.
+        - Parameter a: The right hand side of the equation.
+        - Returns: a `CalculatorOutput` representing the displayable state of the calculator.
+        - Throws: `CalculatorError.invalidInput` if either of the strings cannot be parsed as numbers.
+        - Throws: `CalculatorError.divisionByZero` if division by zero was to be performed.
+    */
     private func performOperation(a: Double, b: Double, dyadic: DyadicOperator) throws -> Double {
         switch dyadic {
         case .plus: return a + b
@@ -182,6 +222,10 @@ class CalculatorStateMachine: ICalculator {
         }
     }
     
+    /**
+        Handler for the reverse sign input.
+        - Returns: a `CalculatorOutput` representing the displayable state of the calculator.
+    */
     private func handleReverseSign() -> CalculatorOutput {
         
         switch state {
@@ -229,7 +273,12 @@ class CalculatorStateMachine: ICalculator {
         
     }
     
-    
+    /**
+        Handler for the user pressing the percent button
+        - Returns: a `CalculatorOutput` representing the displayable state of the calculator.
+        - Throws: `CalculatorError.invalidInput` if either of the strings cannot be parsed as numbers.
+        - Throws: `CalculatorError.divisionByZero` if division by zero was to be performed.
+    */
     private func handlePercent() throws -> CalculatorOutput {
         
         switch self.state {
@@ -265,6 +314,12 @@ class CalculatorStateMachine: ICalculator {
         
     }
     
+    /**
+        Handler for the equals input.
+        - Returns: a `CalculatorOutput` representing the displayable state of the calculator.
+        - Throws: `CalculatorError.invalidInput` if either of the strings cannot be parsed as numbers.
+        - Throws: `CalculatorError.divisionByZero` if division by zero was to be performed.
+    */
     private func handleEquals() throws -> CalculatorOutput {
         switch self.state {
         
@@ -295,6 +350,10 @@ class CalculatorStateMachine: ICalculator {
         }
     }
     
+    /**
+        Handler for the clear input
+        - Returns: a `CalculatorOutput` representing the displayable state of the calculator.
+    */
     private func handleClear() -> CalculatorOutput {
         
         switch self.state {

@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 
+/// Button that allows the user to long press and then copy the current value.
 class CopyableLabel: UILabel {
     
     override var canBecomeFirstResponder: Bool { get { return true }}

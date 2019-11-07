@@ -8,6 +8,7 @@
 
 import UIKit
 
+/// Button that has rounded corners and different colours for the highlighted and selected states.
 class RoundedButton: UIButton {
     
     var defaultBackgroundColor: UIColor? = nil

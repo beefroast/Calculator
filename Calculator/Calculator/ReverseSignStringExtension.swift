@@ -11,6 +11,8 @@ import Foundation
 
 
 extension String {
+    
+    /// Returns the original string but prefixed with a '-' if it was no present, and with the '-' removed if it was.
     func withLeadingMinusSignToggled() -> String {
         if self.prefix(1) == "-" {
             return String(self.suffix(1))
