@@ -12,11 +12,10 @@ import Foundation
 class StatefulCalculator: ICalculator {
 
     var shouldEnteringNumeralClearDisplay: Bool = false
-    var currentResult: String? = nil
-    var operatorNumber: String? = nil
+    var accumulatedValue: String? = nil
+    var currentInput: String? = nil
     var lastOperator: DyadicOperator? = nil
 
-    
     func updateState(input: CalculatorInput) -> CalculatorOutput {
     
         do {
@@ -34,7 +33,34 @@ class StatefulCalculator: ICalculator {
     }
     
     private func handle(numeral: String) -> CalculatorOutput {
-        return CalculatorOutput(display: "")
+        
+        if shouldEnteringNumeralClearDisplay {
+            self.currentInput = nil
+        }
+    
+        switch (self.currentInput, numeral) {
+        
+        case (.none, "0"): fallthrough
+        case (.some("0"), "0"):
+            self.currentInput = "0"
+            return CalculatorOutput(display: "0")
+            
+        case (.none, "."): fallthrough
+        case (.some("0"), "."):
+            self.currentInput = "0."
+            return CalculatorOutput(display: "0.")
+        
+        case (.some("0"), _): fallthrough
+        case (.none, _):
+            self.currentInput = numeral
+            return CalculatorOutput(display: numeral)
+            
+        case (.some(let val), let numeral):
+            let input = val + numeral
+            self.currentInput = input
+            return CalculatorOutput(display: input)
+            
+        }
     }
     
     private func handle(dyadic: DyadicOperator) throws -> CalculatorOutput {
