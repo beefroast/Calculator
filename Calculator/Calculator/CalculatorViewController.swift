@@ -33,7 +33,7 @@ class CalculatorViewController: UIViewController {
         self.labelOutput?.accessibilityValue = newState.display
         
         // Update the clear button label
-        self.clearButton?.setTitle(newState.clearButtonText, for: [.normal, .highlighted])
+        self.clearButton?.setTitle(newState.clearButtonText, for: .normal)
         
         // Update the operators selected state
         self.plusButton?.isSelected = newState.highlightedButton == .some(.plus)
