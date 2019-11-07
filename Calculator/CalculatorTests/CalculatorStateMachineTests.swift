@@ -220,4 +220,11 @@ class CalculatorStateMachineTests: XCTestCase {
         XCTAssertEqual(state.updateState(input: .equals).display, "Error")
     }
     
+    func testDividingByZero() {
+        XCTAssertEqual(state.updateState(input: .numeral("2")).display, "2")
+        XCTAssertEqual(state.updateState(input: .dyadic(.divide)).display, "2")
+        XCTAssertEqual(state.updateState(input: .numeral("0")).display, "0")
+        XCTAssertEqual(state.updateState(input: .equals).display, "Error")
+    }
+    
 }

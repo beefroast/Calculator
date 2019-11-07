@@ -27,6 +27,7 @@ enum CalculatorInput {
     case clear
 }
 
+
 enum CalculatorState {
     
     // The calculator has attempted to divide by zero, or some other error has occured
@@ -64,21 +65,28 @@ class CalculatorStateMachineOutput {
 
 class CalculatorStateMachine {
     
-    
+    enum CalculatorError: Error {
+        case invalidInput
+        case divisionByZero
+    }
     
     private var state = CalculatorState.awaitingInput
     
     func updateState(input: CalculatorInput) -> CalculatorStateMachineOutput {
     
-        switch input {
-        case .numeral(let numeral): return self.handle(numeral: numeral)
-        case .dyadic(let dyadic): return self.handle(dyadic: dyadic)
-        case .reverseSign: return self.handleReverseSign()
-        case .percent: return self.handlePercent()
-        case .equals: return self.handleEquals()
-        case .clear: return self.handleClear()
+        do {
+            switch input {
+            case .numeral(let numeral): return self.handle(numeral: numeral)
+            case .dyadic(let dyadic): return try self.handle(dyadic: dyadic)
+            case .reverseSign: return self.handleReverseSign()
+            case .percent: return try self.handlePercent()
+            case .equals: return try self.handleEquals()
+            case .clear: return self.handleClear()
+            }
+        } catch (let error) {
+            self.state = .error
+            return CalculatorStateMachineOutput(display: "Error")
         }
-        
     }
     
     private func handle(numeral: String) -> CalculatorStateMachineOutput {
@@ -120,7 +128,9 @@ class CalculatorStateMachine {
             switch numeral {
                 
             case "0":
+                self.state = .inputtingSecondNumber(previousNumber, op, numeral)
                 return CalculatorStateMachineOutput(display: numeral, clearButtonText: "C", highlightedButton: op)
+                
                  
              case ".":
                 self.state = .inputtingSecondNumber(previousNumber, op, "0.")
@@ -143,7 +153,7 @@ class CalculatorStateMachine {
          }
     }
     
-    private func handle(dyadic: DyadicOperator) -> CalculatorStateMachineOutput {
+    private func handle(dyadic: DyadicOperator) throws -> CalculatorStateMachineOutput {
         
          switch state {
              
@@ -160,9 +170,9 @@ class CalculatorStateMachine {
             return CalculatorStateMachineOutput(display: a, clearButtonText: "C", highlightedButton: dyadic)
              
          case .inputtingSecondNumber(let a, let op, let b):
-            let calculatedValue = self.performOperation(a: a, b: b, dyadic: op)
-            self.state = .inputtedDyadic(calculatedValue, dyadic)
-            return CalculatorStateMachineOutput(display: calculatedValue, clearButtonText: "C", highlightedButton: dyadic)
+                let calculatedValue = try self.performOperation(a: a, b: b, dyadic: op)
+                self.state = .inputtedDyadic(calculatedValue, dyadic)
+                return CalculatorStateMachineOutput(display: calculatedValue, clearButtonText: "C", highlightedButton: dyadic)
              
          case .showingResult(let a, _, let b):
             self.state = .inputtedDyadic(a, dyadic)
@@ -174,10 +184,14 @@ class CalculatorStateMachine {
          }
     }
     
-    private func performOperation(a: String, b: String, dyadic: DyadicOperator) -> String {
+    private func performOperation(a: String, b: String, dyadic: DyadicOperator) throws -> String {
         
         // TODO: Conversions could be better
-        let value = self.performOperation(a: Double(a)!, b: Double(b)!, dyadic: dyadic)
+        guard let aDouble = Double(a), let bDouble = Double(b) else {
+            throw CalculatorError.invalidInput
+        }
+        
+        let value = try self.performOperation(a: aDouble, b: bDouble, dyadic: dyadic)
         let stringValue = String(value)
         
         // Remove the trailing .0 if we've got an integer value
@@ -188,12 +202,14 @@ class CalculatorStateMachine {
         }
     }
     
-    private func performOperation(a: Double, b: Double, dyadic: DyadicOperator) -> Double {
+    private func performOperation(a: Double, b: Double, dyadic: DyadicOperator) throws -> Double {
         switch dyadic {
         case .plus: return a + b
         case .minus: return a - b
         case .multiply: return a * b
-        case .divide: return a / b
+        case .divide:
+            guard b != 0 else { throw CalculatorError.divisionByZero }
+            return a / b
         }
     }
     
@@ -245,7 +261,7 @@ class CalculatorStateMachine {
     }
     
     
-    private func handlePercent() -> CalculatorStateMachineOutput {
+    private func handlePercent() throws -> CalculatorStateMachineOutput {
         
         switch self.state {
             
@@ -256,13 +272,13 @@ class CalculatorStateMachine {
             return CalculatorStateMachineOutput(display: "0")
             
         case .inputtingFirstNumber(let a):
-            let result = self.performOperation(a: a, b: "100", dyadic: .divide)
+            let result = try self.performOperation(a: a, b: "100", dyadic: .divide)
             self.state = .inputtingFirstNumber(result)
             return CalculatorStateMachineOutput(display: result)
             
         case .inputtedDyadic(let a, let op):
-            let percent = self.performOperation(a: a, b: "100", dyadic: .divide)
-            let result = self.performOperation(a: a, b: percent, dyadic: .multiply)
+            let percent = try self.performOperation(a: a, b: "100", dyadic: .divide)
+            let result = try self.performOperation(a: a, b: percent, dyadic: .multiply)
             self.state = .inputtedDyadic(result, op)
             return CalculatorStateMachineOutput(display: result)
             
@@ -278,7 +294,7 @@ class CalculatorStateMachine {
         
     }
     
-    private func handleEquals() -> CalculatorStateMachineOutput {
+    private func handleEquals() throws -> CalculatorStateMachineOutput {
         switch self.state {
         
         case .error:
@@ -291,17 +307,17 @@ class CalculatorStateMachine {
             return CalculatorStateMachineOutput(display: num)
             
         case .inputtedDyadic(let a, let dyadic):
-            let result = self.performOperation(a: a, b: a, dyadic: dyadic)
+            let result = try self.performOperation(a: a, b: a, dyadic: dyadic)
             self.state = .showingResult(result, dyadic, a)
             return CalculatorStateMachineOutput(display: result)
             
         case .inputtingSecondNumber(let a, let op, let b):
-            let result = self.performOperation(a: a, b: b, dyadic: op)
+            let result = try self.performOperation(a: a, b: b, dyadic: op)
             self.state = .showingResult(result, op, b)
             return CalculatorStateMachineOutput(display: result)
             
         case .showingResult(let a, let op, let b):
-            let result = self.performOperation(a: a, b: b, dyadic: op)
+            let result = try self.performOperation(a: a, b: b, dyadic: op)
             self.state = .showingResult(result, op, b)
             return CalculatorStateMachineOutput(display: result)
             
