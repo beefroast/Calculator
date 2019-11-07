@@ -212,4 +212,12 @@ class CalculatorStateMachineTests: XCTestCase {
         XCTAssertEqual(state.updateState(input: .equals).display, "8")
     }
     
+    func testPushingInvalidCharacters() {
+        XCTAssertEqual(state.updateState(input: .numeral("2")).display, "2")
+        XCTAssertEqual(state.updateState(input: .numeral("c")).display, "2c")
+        XCTAssertEqual(state.updateState(input: .dyadic(.plus)).display, "2c")
+        XCTAssertEqual(state.updateState(input: .numeral("3")).display, "3")
+        XCTAssertEqual(state.updateState(input: .equals).display, "Error")
+    }
+    
 }

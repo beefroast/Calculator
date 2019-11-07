@@ -337,9 +337,16 @@ class CalculatorStateMachine {
         }
 
     }
-    
-    
-    
-    
-    
+}
+
+
+
+extension String {
+    func withLeadingMinusSignToggled() -> String {
+        if self.prefix(1) == "-" {
+            return String(self.suffix(1))
+        } else {
+            return "-" + self
+        }
+    }
 }
