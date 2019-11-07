@@ -55,6 +55,13 @@ class StatefulCalculator: ICalculator {
             self.currentInput = numeral
             return CalculatorOutput(display: numeral)
             
+        case (.some(let val), "."):
+            guard val.contains(".") == false else {
+                return CalculatorOutput(display: val)
+            }
+            self.currentInput = val + "."
+            return CalculatorOutput(display: val + ".")
+            
         case (.some(let val), let numeral):
             let input = val + numeral
             self.currentInput = input
