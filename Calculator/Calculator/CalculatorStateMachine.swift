@@ -8,71 +8,40 @@
 
 import Foundation
 
-// Dyadic Operators work on two numbers
-enum DyadicOperator {
-    case plus
-    case minus
-    case multiply
-    case divide
-}
 
 
 
-enum CalculatorInput {
-    case numeral(String)
-    case dyadic(DyadicOperator)
-    case reverseSign
-    case percent
-    case equals
-    case clear
-}
-
-
-enum CalculatorState {
-    
-    // The calculator has attempted to divide by zero, or some other error has occured
-    case error
-    
-    // We've inputted nothing, so we're awaiting input
-    case awaitingInput
-    
-    // We're inputting our first number
-    case inputtingFirstNumber(String)
-    
-    // We've inputted a number and a dyadic operator
-    case inputtedDyadic(String, DyadicOperator)
-    
-    // We're inputting our second number
-    case inputtingSecondNumber(String, DyadicOperator, String)
-    
-    // We're showing the result of a calculation with a dyadic operator
-    case showingResult(String, DyadicOperator, String)
-}
-
-class CalculatorStateMachineOutput {
-    
-    let display: String
-    let clearButtonText: String
-    let highlightedButton: DyadicOperator?
-    
-    init(display: String, clearButtonText: String = "C", highlightedButton: DyadicOperator? = nil) {
-        self.display = display
-        self.clearButtonText = clearButtonText
-        self.highlightedButton = highlightedButton
-    }
-}
-
-
-class CalculatorStateMachine {
+class CalculatorStateMachine: ICalculator {
     
     enum CalculatorError: Error {
         case invalidInput
         case divisionByZero
     }
     
+    enum CalculatorState {
+        
+        // The calculator has attempted to divide by zero, or some other error has occured
+        case error
+        
+        // We've inputted nothing, so we're awaiting input
+        case awaitingInput
+        
+        // We're inputting our first number
+        case inputtingFirstNumber(String)
+        
+        // We've inputted a number and a dyadic operator
+        case inputtedDyadic(String, DyadicOperator)
+        
+        // We're inputting our second number
+        case inputtingSecondNumber(String, DyadicOperator, String)
+        
+        // We're showing the result of a calculation with a dyadic operator
+        case showingResult(String, DyadicOperator, String)
+    }
+    
     private var state = CalculatorState.awaitingInput
     
-    func updateState(input: CalculatorInput) -> CalculatorStateMachineOutput {
+    func updateState(input: CalculatorInput) -> CalculatorOutput {
     
         do {
             switch input {
@@ -85,43 +54,43 @@ class CalculatorStateMachine {
             }
         } catch (let error) {
             self.state = .error
-            return CalculatorStateMachineOutput(display: "Error")
+            return CalculatorOutput(display: "Error")
         }
     }
     
-    private func handle(numeral: String) -> CalculatorStateMachineOutput {
+    private func handle(numeral: String) -> CalculatorOutput {
         
         switch self.state {
             
         case .error:
-            return CalculatorStateMachineOutput(display: "Error")
+            return CalculatorOutput(display: "Error")
          
          case .awaitingInput:
             
             switch numeral {
             
             case "0":
-                return CalculatorStateMachineOutput(display: numeral)
+                return CalculatorOutput(display: numeral)
                 
             case ".":
                 self.state = .inputtingFirstNumber("0.")
-                return CalculatorStateMachineOutput(display: "0.")
+                return CalculatorOutput(display: "0.")
                 
             default:
                 self.state = .inputtingFirstNumber(numeral)
-                return CalculatorStateMachineOutput(display: numeral)
+                return CalculatorOutput(display: numeral)
                 
             }
              
          case .inputtingFirstNumber(let currentNum):
             
             guard (currentNum.contains(".") && numeral == ".") == false else {
-                return CalculatorStateMachineOutput(display: currentNum)
+                return CalculatorOutput(display: currentNum)
             }
             
             let result = currentNum + numeral
             self.state = .inputtingFirstNumber(result)
-            return CalculatorStateMachineOutput(display: result)
+            return CalculatorOutput(display: result)
              
          case .inputtedDyadic(let previousNumber, let op):
             
@@ -129,57 +98,57 @@ class CalculatorStateMachine {
                 
             case "0":
                 self.state = .inputtingSecondNumber(previousNumber, op, numeral)
-                return CalculatorStateMachineOutput(display: numeral, clearButtonText: "C", highlightedButton: op)
+                return CalculatorOutput(display: numeral, clearButtonText: "C", highlightedButton: op)
                 
                  
              case ".":
                 self.state = .inputtingSecondNumber(previousNumber, op, "0.")
-                return CalculatorStateMachineOutput(display: "0.", clearButtonText: "C", highlightedButton: op)
+                return CalculatorOutput(display: "0.", clearButtonText: "C", highlightedButton: op)
                  
              default:
                  self.state = .inputtingSecondNumber(previousNumber, op, numeral)
-                 return CalculatorStateMachineOutput(display: numeral, clearButtonText: "C", highlightedButton: op)
+                 return CalculatorOutput(display: numeral, clearButtonText: "C", highlightedButton: op)
             }
              
          case .inputtingSecondNumber(let previousNumber, let op, let currentNum):
             let result = currentNum + numeral
             self.state = .inputtingSecondNumber(previousNumber, op, result)
-            return CalculatorStateMachineOutput(display: result, clearButtonText: "C", highlightedButton: op)
+            return CalculatorOutput(display: result, clearButtonText: "C", highlightedButton: op)
              
          case .showingResult(_, _, _):
              self.state = .inputtingFirstNumber(numeral)
-            return CalculatorStateMachineOutput(display: numeral)
+            return CalculatorOutput(display: numeral)
          
          }
     }
     
-    private func handle(dyadic: DyadicOperator) throws -> CalculatorStateMachineOutput {
+    private func handle(dyadic: DyadicOperator) throws -> CalculatorOutput {
         
          switch state {
              
          case .awaitingInput:
             self.state = .inputtedDyadic("0", dyadic)
-            return CalculatorStateMachineOutput(display: "0", clearButtonText: "C", highlightedButton: dyadic)
+            return CalculatorOutput(display: "0", clearButtonText: "C", highlightedButton: dyadic)
              
          case .inputtingFirstNumber(let a):
             self.state = .inputtedDyadic(a, dyadic)
-            return CalculatorStateMachineOutput(display: a, clearButtonText: "C", highlightedButton: dyadic)
+            return CalculatorOutput(display: a, clearButtonText: "C", highlightedButton: dyadic)
              
          case .inputtedDyadic(let a, let op):
              self.state = .inputtedDyadic(a, dyadic)
-            return CalculatorStateMachineOutput(display: a, clearButtonText: "C", highlightedButton: dyadic)
+            return CalculatorOutput(display: a, clearButtonText: "C", highlightedButton: dyadic)
              
          case .inputtingSecondNumber(let a, let op, let b):
                 let calculatedValue = try self.performOperation(a: a, b: b, dyadic: op)
                 self.state = .inputtedDyadic(calculatedValue, dyadic)
-                return CalculatorStateMachineOutput(display: calculatedValue, clearButtonText: "C", highlightedButton: dyadic)
+                return CalculatorOutput(display: calculatedValue, clearButtonText: "C", highlightedButton: dyadic)
              
          case .showingResult(let a, _, let b):
             self.state = .inputtedDyadic(a, dyadic)
-            return CalculatorStateMachineOutput(display: a)
+            return CalculatorOutput(display: a)
             
          case .error:
-            return CalculatorStateMachineOutput(display: "Error")
+            return CalculatorOutput(display: "Error")
             
          }
     }
@@ -213,142 +182,142 @@ class CalculatorStateMachine {
         }
     }
     
-    private func handleReverseSign() -> CalculatorStateMachineOutput {
+    private func handleReverseSign() -> CalculatorOutput {
         
         switch state {
 
         case .error:
-            return CalculatorStateMachineOutput(display: "Error")
+            return CalculatorOutput(display: "Error")
 
         case .awaitingInput:
-            return CalculatorStateMachineOutput(display: "0")
+            return CalculatorOutput(display: "0")
 
         case .inputtingFirstNumber(let a):
             
             guard a != "0." else {
                 // -0 is the same as zero, so we're still awaiting input
                 self.state = .awaitingInput
-                return CalculatorStateMachineOutput(display: "0")
+                return CalculatorOutput(display: "0")
             }
             
             let result = a.withLeadingMinusSignToggled()
             self.state = .inputtingFirstNumber(result)
-            return CalculatorStateMachineOutput(display: result)
+            return CalculatorOutput(display: result)
 
         case .inputtedDyadic(let a, let op):
             let result = a.withLeadingMinusSignToggled()
             self.state = .inputtedDyadic(result, op)
-            return CalculatorStateMachineOutput(display: result)
+            return CalculatorOutput(display: result)
 
         case .inputtingSecondNumber(let a, let op, let b):
             
             guard b != "0." else {
                 // -0 is the same as zero, so we're still awaiting input
                 self.state = .inputtedDyadic(a, op)
-                return CalculatorStateMachineOutput(display: "0")
+                return CalculatorOutput(display: "0")
             }
             
             let result = b.withLeadingMinusSignToggled()
-            self.state = .inputtingSecondNumber(a, op, result)
-            return CalculatorStateMachineOutput(display: result)
+            self.state = .showingResult(result, op, a)
+            return CalculatorOutput(display: result)
 
         case .showingResult(let a, let op, let b):
             let result = a.withLeadingMinusSignToggled()
             self.state = .inputtingSecondNumber(result, op, b)
-            return CalculatorStateMachineOutput(display: result)
+            return CalculatorOutput(display: result)
         }
         
     }
     
     
-    private func handlePercent() throws -> CalculatorStateMachineOutput {
+    private func handlePercent() throws -> CalculatorOutput {
         
         switch self.state {
             
         case .error:
-            return CalculatorStateMachineOutput(display: "Error")
+            return CalculatorOutput(display: "Error")
             
         case .awaitingInput:
-            return CalculatorStateMachineOutput(display: "0")
+            return CalculatorOutput(display: "0")
             
         case .inputtingFirstNumber(let a):
             let result = try self.performOperation(a: a, b: "100", dyadic: .divide)
             self.state = .inputtingFirstNumber(result)
-            return CalculatorStateMachineOutput(display: result)
+            return CalculatorOutput(display: result)
             
         case .inputtedDyadic(let a, let op):
             let percent = try self.performOperation(a: a, b: "100", dyadic: .divide)
             let result = try self.performOperation(a: a, b: percent, dyadic: .multiply)
             self.state = .inputtedDyadic(result, op)
-            return CalculatorStateMachineOutput(display: result)
+            return CalculatorOutput(display: result)
             
         case .inputtingSecondNumber(let a, let op, let b):
             self.state = .error
-            return CalculatorStateMachineOutput(display: "Error")
+            return CalculatorOutput(display: "Error")
             
         case .showingResult(let a, let op, let b):
             self.state = .error
-            return CalculatorStateMachineOutput(display: "Error")
+            return CalculatorOutput(display: "Error")
             
         }
         
     }
     
-    private func handleEquals() throws -> CalculatorStateMachineOutput {
+    private func handleEquals() throws -> CalculatorOutput {
         switch self.state {
         
         case .error:
-            return CalculatorStateMachineOutput(display: "Error")
+            return CalculatorOutput(display: "Error")
         
         case .awaitingInput:
-            return CalculatorStateMachineOutput(display: "0")
+            return CalculatorOutput(display: "0")
             
         case .inputtingFirstNumber(let num):
-            return CalculatorStateMachineOutput(display: num)
+            return CalculatorOutput(display: num)
             
         case .inputtedDyadic(let a, let dyadic):
             let result = try self.performOperation(a: a, b: a, dyadic: dyadic)
             self.state = .showingResult(result, dyadic, a)
-            return CalculatorStateMachineOutput(display: result)
+            return CalculatorOutput(display: result)
             
         case .inputtingSecondNumber(let a, let op, let b):
             let result = try self.performOperation(a: a, b: b, dyadic: op)
             self.state = .showingResult(result, op, b)
-            return CalculatorStateMachineOutput(display: result)
+            return CalculatorOutput(display: result)
             
         case .showingResult(let a, let op, let b):
             let result = try self.performOperation(a: a, b: b, dyadic: op)
             self.state = .showingResult(result, op, b)
-            return CalculatorStateMachineOutput(display: result)
+            return CalculatorOutput(display: result)
             
         }
     }
     
-    private func handleClear() -> CalculatorStateMachineOutput {
+    private func handleClear() -> CalculatorOutput {
         
         switch self.state {
             
         case .error:
             self.state = .awaitingInput
-            return CalculatorStateMachineOutput(display: "0")
+            return CalculatorOutput(display: "0")
             
         case .awaitingInput:
-            return CalculatorStateMachineOutput(display: "0")
+            return CalculatorOutput(display: "0")
             
         case .inputtingFirstNumber(_):
             self.state = .awaitingInput
-            return CalculatorStateMachineOutput(display: "0")
+            return CalculatorOutput(display: "0")
             
         case .inputtedDyadic(let a, _):
             self.state = .inputtingFirstNumber(a)
-            return CalculatorStateMachineOutput(display: a)
+            return CalculatorOutput(display: a)
             
         case .inputtingSecondNumber(let a, let op, _):
             self.state = .inputtedDyadic(a, op)
-            return CalculatorStateMachineOutput(display: "0")
+            return CalculatorOutput(display: "0")
             
         case .showingResult(_, _, _):
-            return CalculatorStateMachineOutput(display: "0")
+            return CalculatorOutput(display: "0")
             
         }
 
@@ -356,13 +325,3 @@ class CalculatorStateMachine {
 }
 
 
-
-extension String {
-    func withLeadingMinusSignToggled() -> String {
-        if self.prefix(1) == "-" {
-            return String(self.suffix(1))
-        } else {
-            return "-" + self
-        }
-    }
-}

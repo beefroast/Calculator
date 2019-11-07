@@ -22,7 +22,7 @@ class CalculatorViewController: UIViewController {
     @IBOutlet weak var multiplyButton: UIButton?
     @IBOutlet weak var divideButton: UIButton?
     
-    var state = CalculatorStateMachine()
+    var state: ICalculator = CalculatorStateMachine()
     
     private func updateState(input: CalculatorInput) {
         
