@@ -71,15 +71,40 @@ class StatefulCalculator: ICalculator {
     }
     
     private func handle(dyadic: DyadicOperator) throws -> CalculatorOutput {
-         return CalculatorOutput(display: "")
+        let accumulatedValue = self.currentInput ?? "0"
+        self.accumulatedValue = accumulatedValue
+        self.currentInput = nil
+        self.lastOperator = dyadic
+        return CalculatorOutput(display: accumulatedValue)
     }
     
     private func performOperation(a: String, b: String, dyadic: DyadicOperator) throws -> String {
-        return ""
+        
+        // TODO: Conversions could be better
+        guard let aDouble = Double(a), let bDouble = Double(b) else {
+            throw NSError(domain: "", code: 0, userInfo: nil)
+        }
+        
+        let value = try self.performOperation(a: aDouble, b: bDouble, dyadic: dyadic)
+        let stringValue = String(value)
+        
+        // Remove the trailing .0 if we've got an integer value
+        if stringValue.suffix(2) == ".0" {
+            return String(stringValue.dropLast(2))
+        } else {
+            return stringValue
+        }
     }
     
     private func performOperation(a: Double, b: Double, dyadic: DyadicOperator) throws -> Double {
-        return 0.0
+        switch dyadic {
+        case .plus: return a + b
+        case .minus: return a - b
+        case .multiply: return a * b
+        case .divide:
+            guard b != 0 else { throw NSError(domain: "", code: 0, userInfo: nil) }
+            return a / b
+        }
     }
     
     private func handleReverseSign() -> CalculatorOutput {
@@ -91,7 +116,23 @@ class StatefulCalculator: ICalculator {
     }
     
     private func handleEquals() throws -> CalculatorOutput {
-        return CalculatorOutput(display: "")
+        
+        guard let op = self.lastOperator else {
+            return CalculatorOutput(display: self.currentInput ?? "0")
+        }
+        
+        switch (self.accumulatedValue, self.currentInput) {
+            
+        case (.some(let a), .some(let b)):
+            let result = try self.performOperation(a: a, b: b, dyadic: op)
+            self.accumulatedValue = result
+            self.currentInput = b
+            return CalculatorOutput(display: result)
+            
+        default:
+            return CalculatorOutput(display: "Error")
+        }
+        
     }
     
     private func handleClear() -> CalculatorOutput {
