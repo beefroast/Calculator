@@ -193,6 +193,14 @@ class CalculatorStateMachineTests: XCTestCase {
         XCTAssertEqual(state.updateState(input: .reverseSign).display, "0")
         XCTAssertEqual(state.updateState(input: .numeral("2")).display, "2")
     }
+    
+    func testReverseSignOnSecondValue() {
+        XCTAssertEqual(state.updateState(input: .numeral("2")).display, "2")
+        XCTAssertEqual(state.updateState(input: .dyadic(.plus)).display, "2")
+        XCTAssertEqual(state.updateState(input: .numeral("3")).display, "3")
+        XCTAssertEqual(state.updateState(input: .reverseSign).display, "-3")
+        XCTAssertEqual(state.updateState(input: .equals).display, "-1")
+    }
 
 
     // MARK: - Test Percent

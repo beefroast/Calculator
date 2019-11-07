@@ -50,21 +50,26 @@ class CalculatorOutput {
     /// The display on the calculator screen
     let display: String
     
+    /// The display on the calculation label
+    let calculation: String?
+    
     /// The title of the clear button
     let clearButtonText: String
     
     /// An optional highlighted button
     let highlightedButton: DyadicOperator?
-    
+     
     /**
         Constructs a CalculatorOutput
         - Parameter display: The display on the calculator screen.
         - Parameter clearButtonText: The title of the clear button.
         - Parameter highlightedButton: An optional highlighted button.
+        - Parameter highlightedButton: Optional equation to show on the calculator.
      */
-    init(display: String, clearButtonText: String = "C", highlightedButton: DyadicOperator? = nil) {
+    init(display: String, clearButtonText: String = "C", highlightedButton: DyadicOperator? = nil, calculation: String? = nil) {
         self.display = display
         self.clearButtonText = clearButtonText
         self.highlightedButton = highlightedButton
+        self.calculation = calculation
     }
 }

@@ -12,6 +12,9 @@ import UIKit
 /// View Controller for displaying a calculator
 class CalculatorViewController: UIViewController {
     
+    /// Label representing the calculation that has taken place
+    @IBOutlet weak var labelCalculation: UILabel?
+    
     /// Label representing the calculator input/output
     @IBOutlet weak var labelOutput: UILabel?
     
@@ -47,6 +50,10 @@ class CalculatorViewController: UIViewController {
         
         // Update the clear button label
         self.clearButton?.setTitle(newState.clearButtonText, for: .normal)
+        
+        // Update the calculation display
+        self.labelCalculation?.text = newState.calculation
+        self.labelCalculation?.accessibilityValue = newState.calculation
         
         // Update the operators selected state
         self.plusButton?.isSelected = newState.highlightedButton == .some(.plus)
