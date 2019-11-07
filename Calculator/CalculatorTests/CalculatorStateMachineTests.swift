@@ -157,7 +157,13 @@ class CalculatorStateMachineTests: XCTestCase {
         XCTAssertEqual(state.updateState(input: .reverseSign).display, "2")
     }
     
-    func testInputResettingAfterReverseSign() {
+    func testInputAfterReversingSign() {
+        XCTAssertEqual(state.updateState(input: .numeral("2")).display, "2")
+        XCTAssertEqual(state.updateState(input: .reverseSign).display, "-2")
+        XCTAssertEqual(state.updateState(input: .numeral("3")).display, "3")
+    }
+    
+    func testInputResettingAfterReverseSignOnSecondInput() {
         XCTAssertEqual(state.updateState(input: .numeral("8")).display, "8")
         XCTAssertEqual(state.updateState(input: .dyadic(.multiply)).display, "8")
         XCTAssertEqual(state.updateState(input: .numeral("6")).display, "6")
@@ -191,6 +197,19 @@ class CalculatorStateMachineTests: XCTestCase {
         XCTAssertEqual(state.updateState(input: .dyadic(.minus)).highlightedButton, .minus)
         XCTAssertEqual(state.updateState(input: .numeral("1")).highlightedButton, .minus)
         XCTAssertEqual(state.updateState(input: .equals).highlightedButton, nil)
+    }
+    
+    // MARK: - Assorted Weird Cases
+    
+    func testTwoResultsBackToBack() {
+        XCTAssertEqual(state.updateState(input: .numeral("2")).display, "2")
+        XCTAssertEqual(state.updateState(input: .dyadic(.plus)).display, "2")
+        XCTAssertEqual(state.updateState(input: .numeral("3")).display, "3")
+        XCTAssertEqual(state.updateState(input: .equals).display, "5")
+        XCTAssertEqual(state.updateState(input: .numeral("9")).display, "9")
+        XCTAssertEqual(state.updateState(input: .dyadic(.minus)).display, "9")
+        XCTAssertEqual(state.updateState(input: .numeral("1")).display, "1")
+        XCTAssertEqual(state.updateState(input: .equals).display, "8")
     }
     
 }

@@ -511,6 +511,7 @@
                             </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="900" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="YCa-EF-COG" customClass="CopyableLabel" customModule="Calculator" customModuleProvider="target">
                                 <rect key="frame" x="20" y="116.33333333333334" width="374" height="109.33333333333334"/>
+                                <accessibility key="accessibilityConfiguration" identifier="Display"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="100" id="cHQ-mt-kOp"/>
                                 </constraints>
