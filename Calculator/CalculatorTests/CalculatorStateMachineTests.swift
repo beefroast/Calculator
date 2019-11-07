@@ -11,7 +11,7 @@ import XCTest
 
 class CalculatorStateMachineTests: XCTestCase {
 
-    var state = CalculatorStateMachine()
+    var state: ICalculator = CalculatorStateMachine()
     
     override func setUp() {
         self.state = CalculatorStateMachine()
@@ -210,6 +210,15 @@ class CalculatorStateMachineTests: XCTestCase {
         XCTAssertEqual(state.updateState(input: .dyadic(.minus)).display, "9")
         XCTAssertEqual(state.updateState(input: .numeral("1")).display, "1")
         XCTAssertEqual(state.updateState(input: .equals).display, "8")
+    }
+    
+    func testWeird() {
+        XCTAssertEqual(state.updateState(input: .numeral("8")).display, "8")
+        XCTAssertEqual(state.updateState(input: .dyadic(.plus)).display, "8")
+        XCTAssertEqual(state.updateState(input: .numeral("9")).display, "9")
+        XCTAssertEqual(state.updateState(input: .equals).display, "17")
+        XCTAssertEqual(state.updateState(input: .numeral("3")).display, "3")
+        XCTAssertEqual(state.updateState(input: .equals).display, "12")
     }
     
     func testPushingInvalidCharacters() {
