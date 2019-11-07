@@ -71,11 +71,26 @@ class StatefulCalculator: ICalculator {
     }
     
     private func handle(dyadic: DyadicOperator) throws -> CalculatorOutput {
-        let accumulatedValue = self.currentInput ?? "0"
-        self.accumulatedValue = accumulatedValue
-        self.currentInput = nil
-        self.lastOperator = dyadic
-        return CalculatorOutput(display: accumulatedValue)
+        
+        switch (self.accumulatedValue, self.currentInput, self.lastOperator) {
+            
+        case (.some(let a), .some(let b), .some(let op)):
+            let result = try self.performOperation(a: a, b: b, dyadic: op)
+            self.accumulatedValue = result
+            self.currentInput = nil
+            self.lastOperator = dyadic
+            return CalculatorOutput(display: result)
+            
+        default:
+            let accumulatedValue = self.currentInput ?? "0"
+            self.accumulatedValue = accumulatedValue
+            self.currentInput = nil
+            self.lastOperator = dyadic
+            return CalculatorOutput(display: accumulatedValue)
+            
+        }
+        
+        
     }
     
     private func performOperation(a: String, b: String, dyadic: DyadicOperator) throws -> String {
