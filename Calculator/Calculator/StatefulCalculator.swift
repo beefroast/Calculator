@@ -12,8 +12,11 @@ import Foundation
 class StatefulCalculator: ICalculator {
 
     var shouldEnteringNumeralClearDisplay: Bool = false
+    var shouldClearLastOperatorOnOperatorInput: Bool = false
+    
     var accumulatedValue: String? = nil
     var currentInput: String? = nil
+    var lastOperatorValue: String? = nil
     var lastOperator: DyadicOperator? = nil
 
     func updateState(input: CalculatorInput) -> CalculatorOutput {
@@ -35,6 +38,7 @@ class StatefulCalculator: ICalculator {
     private func handle(numeral: String) -> CalculatorOutput {
         
         if shouldEnteringNumeralClearDisplay {
+            self.shouldEnteringNumeralClearDisplay = false
             self.currentInput = nil
         }
     
@@ -72,11 +76,17 @@ class StatefulCalculator: ICalculator {
     
     private func handle(dyadic: DyadicOperator) throws -> CalculatorOutput {
         
+        if self.shouldClearLastOperatorOnOperatorInput {
+            self.shouldClearLastOperatorOnOperatorInput = false
+            self.lastOperator = nil
+        }
+        
         switch (self.accumulatedValue, self.currentInput, self.lastOperator) {
             
         case (.some(let a), .some(let b), .some(let op)):
             let result = try self.performOperation(a: a, b: b, dyadic: op)
             self.accumulatedValue = result
+            self.lastOperatorValue = b
             self.currentInput = nil
             self.lastOperator = dyadic
             return CalculatorOutput(display: result)
@@ -136,12 +146,18 @@ class StatefulCalculator: ICalculator {
             return CalculatorOutput(display: self.currentInput ?? "0")
         }
         
-        switch (self.accumulatedValue, self.currentInput) {
+        if self.lastOperatorValue == nil {
+            self.lastOperatorValue = self.currentInput
+        }
+        
+        switch (self.accumulatedValue, self.lastOperatorValue) {
             
         case (.some(let a), .some(let b)):
             let result = try self.performOperation(a: a, b: b, dyadic: op)
             self.accumulatedValue = result
             self.currentInput = b
+            self.shouldEnteringNumeralClearDisplay = true
+            self.shouldClearLastOperatorOnOperatorInput = true
             return CalculatorOutput(display: result)
             
         default:

@@ -233,4 +233,18 @@ class CalculatorStateMachineTests: XCTestCase {
         XCTAssertEqual(state.updateState(input: .equals).display, "Error")
     }
     
+    func testWeirdCaseInWhichDivisionIsAppliedBeforeSubtraction() {
+        // See: https://discussions.apple.com/thread/1635093
+        XCTAssertEqual(state.updateState(input: .numeral("4")).display, "4")
+        XCTAssertEqual(state.updateState(input: .numeral("8")).display, "48")
+        XCTAssertEqual(state.updateState(input: .numeral("0")).display, "480")
+        XCTAssertEqual(state.updateState(input: .dyadic(.minus)).display, "480")
+        XCTAssertEqual(state.updateState(input: .numeral("3")).display, "3")
+        XCTAssertEqual(state.updateState(input: .numeral("6")).display, "36")
+        XCTAssertEqual(state.updateState(input: .numeral("0")).display, "360")
+        XCTAssertEqual(state.updateState(input: .dyadic(.divide)).display, "360")
+        XCTAssertEqual(state.updateState(input: .numeral("5")).display, "5")
+        XCTAssertEqual(state.updateState(input: .equals).display, "408")
+    }
+    
 }
