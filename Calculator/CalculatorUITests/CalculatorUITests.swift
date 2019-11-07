@@ -69,8 +69,10 @@ class CalculatorUITests: XCTestCase {
 
         app.buttons["9"].tap()
         app.buttons["+"].tap()
+        XCTAssertTrue(app.buttons["+"].isSelected)
         app.buttons["7"].tap()
         app.buttons["="].tap()
+        XCTAssertFalse(app.buttons["+"].isSelected)
         
         XCTAssertEqual(display.value as? String, "16")
     }
@@ -79,9 +81,10 @@ class CalculatorUITests: XCTestCase {
 
         app.buttons["9"].tap()
         app.buttons["−"].tap()
+        XCTAssertTrue(app.buttons["−"].isSelected)
         app.buttons["7"].tap()
         app.buttons["="].tap()
-        
+        XCTAssertFalse(app.buttons["−"].isSelected)
         XCTAssertEqual(display.value as? String, "2")
     }
     
@@ -89,9 +92,10 @@ class CalculatorUITests: XCTestCase {
 
         app.buttons["9"].tap()
         app.buttons["×"].tap()
+        XCTAssertTrue(app.buttons["×"].isSelected)
         app.buttons["7"].tap()
         app.buttons["="].tap()
-        
+        XCTAssertFalse(app.buttons["×"].isSelected)
         XCTAssertEqual(display.value as? String, "63")
     }
     
@@ -99,9 +103,10 @@ class CalculatorUITests: XCTestCase {
 
         app.buttons["8"].tap()
         app.buttons["÷"].tap()
+        XCTAssertTrue(app.buttons["÷"].isSelected)
         app.buttons["4"].tap()
         app.buttons["="].tap()
-        
+        XCTAssertFalse(app.buttons["÷"].isSelected)
         XCTAssertEqual(display.value as? String, "2")
     }
     

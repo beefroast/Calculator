@@ -145,7 +145,7 @@ class CalculatorStateMachine: ICalculator {
              
          case .showingResult(let a, _, let b):
             self.state = .inputtedDyadic(a, dyadic)
-            return CalculatorOutput(display: a)
+            return CalculatorOutput(display: a, clearButtonText: "C", highlightedButton: dyadic)
             
          case .error:
             return CalculatorOutput(display: "Error")
