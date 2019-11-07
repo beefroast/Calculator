@@ -175,6 +175,7 @@ class CalculatorStateMachineTests: XCTestCase {
     }
     
     func testMultipleReverseSign() {
+        // NOTE: This deviates from the MacOS calculator implementation, but I find it more convenient.
         XCTAssertEqual(state.updateState(input: .numeral("2")).display, "2")
         XCTAssertEqual(state.updateState(input: .reverseSign).display, "-2")
         XCTAssertEqual(state.updateState(input: .numeral("3")).display, "-23")

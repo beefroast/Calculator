@@ -262,7 +262,7 @@ class CalculatorStateMachine: ICalculator {
             }
             
             let result = b.withLeadingMinusSignToggled()
-            self.state = .showingResult(result, op, a)
+            self.state = .inputtingSecondNumber(a, op, result)
             return CalculatorOutput(display: result, clearButtonText: "AC")
 
         case .showingResult(let a, let op, let b):
