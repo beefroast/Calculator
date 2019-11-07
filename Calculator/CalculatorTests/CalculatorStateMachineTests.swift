@@ -11,15 +11,12 @@ import XCTest
 
 class CalculatorStateMachineTests: XCTestCase {
 
-    var state: ICalculator = CalculatorStateMachine()
+    var state: ICalculator!
     
     override func setUp() {
         self.state = CalculatorStateMachine()
     }
 
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
 
     // MARK: - Numerals
     
@@ -212,7 +209,7 @@ class CalculatorStateMachineTests: XCTestCase {
         XCTAssertEqual(state.updateState(input: .equals).display, "8")
     }
     
-    func testWeird() {
+    func testEqualsNumeralEquals() {
         XCTAssertEqual(state.updateState(input: .numeral("8")).display, "8")
         XCTAssertEqual(state.updateState(input: .dyadic(.plus)).display, "8")
         XCTAssertEqual(state.updateState(input: .numeral("9")).display, "9")

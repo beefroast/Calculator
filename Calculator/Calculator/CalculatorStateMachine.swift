@@ -115,8 +115,8 @@ class CalculatorStateMachine: ICalculator {
             self.state = .inputtingSecondNumber(previousNumber, op, result)
             return CalculatorOutput(display: result, clearButtonText: "C", highlightedButton: op)
              
-         case .showingResult(_, _, _):
-             self.state = .inputtingFirstNumber(numeral)
+         case .showingResult(let a, let op, let b):
+            self.state = .inputtingSecondNumber(b, op, numeral)
             return CalculatorOutput(display: numeral)
          
          }
