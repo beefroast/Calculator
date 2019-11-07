@@ -252,8 +252,10 @@ class CalculatorStateMachine: ICalculator {
             return CalculatorOutput(display: result)
             
         case .inputtingSecondNumber(let a, let op, let b):
-            self.state = .error
-            return CalculatorOutput(display: "Error")
+            let percent = try self.performOperation(a: b, b: "100", dyadic: .divide)
+            let percentOfA = try self.performOperation(a: a, b: percent, dyadic: .multiply)
+            self.state = .showingResult(a, op, percentOfA)
+            return CalculatorOutput(display: percentOfA)
             
         case .showingResult(let a, let op, let b):
             self.state = .error
