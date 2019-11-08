@@ -74,17 +74,25 @@ indirect enum CalculationNode {
     func handle(dyadic: DyadicOperator) -> CalculationNode {
         switch self {
             
-        case .dyadic(let lhs, _, .none):
-            return CalculationNode.dyadic(lhs, dyadic, nil)
+        case .dyadic(let lhs, let op, .none):
+            return .dyadic(lhs, dyadic, nil)
             
-        case .dyadic(let lhs, let op, .some(let rhs)):
+        case .dyadic(let ownLhs, let ownOp, .some(let ownRhs)):
             
-            if dyadic == .divide || dyadic == .multiply {
-                return .dyadic(lhs, op, .dyadic(rhs, dyadic, nil))
-            } else {
-                return CalculationNode.dyadic(self, dyadic, nil)
+            let rhsHandled = ownRhs.handle(dyadic: dyadic)
+            
+            switch rhsHandled {
+                
+            case .dyadic(let lhs, .plus, let rhs):
+                return .dyadic(.dyadic(ownLhs, ownOp, lhs), .plus, rhs)
+                
+            case .dyadic(let lhs, .minus, let rhs):
+                return .dyadic(.dyadic(ownLhs, ownOp, lhs), .minus, rhs)
+                
+            default:
+                return .dyadic(ownLhs, ownOp, rhsHandled)
             }
-        
+            
         default:
             return CalculationNode.dyadic(self, dyadic, nil)
         }
@@ -123,6 +131,8 @@ indirect enum CalculationNode {
             return .functional(.percent, self)
         }
     }
+    
+
     
     func handleEquals() -> CalculationNode {
         switch self {
@@ -168,30 +178,32 @@ indirect enum CalculationNode {
         }
     }
     
-    func debugDisplay() -> String {
+    func debugCalculationDisplay() -> String {
         
         switch self {
-            
-            case .numeral(let num):
-                return num
-                
-            case .dyadic(let lhs, let op, let rhs):
-                return "(\(lhs.debugDisplay()) \(symbolForDyadic(op: op)) \(rhs?.debugDisplay() ?? "nil"))"
-                
-            case .functional(.reverseSign, let node):
-                return "-(\(node.debugDisplay()))"
-                
-            case .functional(.percent, .numeral(let num)):
-                return "(\(num)%)"
-                
-            case .functional(.percent, let node):
-                return "(\(node.debugDisplay()))%"
-                
-            case .result(let node):
-                return "(\(node.debugDisplay()))"
-                
-        }
-        
+             
+         case .numeral("0"):
+             return "0"
+             
+         case .numeral(let num):
+             return num
+             
+         case .dyadic(let lhs, let op, let rhs):
+             return "(\(lhs.debugCalculationDisplay()) \(symbolForDyadic(op: op)) \(rhs?.debugCalculationDisplay() ?? "nil"))"
+             
+         case .functional(.reverseSign, let node):
+             return "(-\(node.debugCalculationDisplay()))"
+             
+         case .functional(.percent, .numeral(let num)):
+             return "(\(num)%)"
+             
+         case .functional(.percent, let node):
+             return "(\(node.debugCalculationDisplay())%)"
+             
+         case .result(let node):
+                 return "(\(node.debugCalculationDisplay()))"
+             }
+         
     }
     
     func getCalculationDisplay(isRootNode: Bool = false) -> String {
@@ -352,6 +364,9 @@ class CalculatorNodeStateMachine: ICalculator {
         case (.clear, true):
             self.wasLastInputClear = true
             self.calculation = .numeral("0")
+            
+            print(calculation.debugCalculationDisplay())
+            
             return CalculatorOutput(
                 display: "0",
                 clearButtonText: "AC",
@@ -361,6 +376,8 @@ class CalculatorNodeStateMachine: ICalculator {
         case (.clear, false):
             wasLastInputClear = true
             self.calculation = calculation.apply(input: input)
+            
+            print(calculation.debugCalculationDisplay())
             
             switch self.calculation {
                 
@@ -383,6 +400,9 @@ class CalculatorNodeStateMachine: ICalculator {
         default:
             wasLastInputClear = false
             self.calculation = calculation.apply(input: input)
+            
+            print(calculation.debugCalculationDisplay())
+            
             let wouldClear = self.calculation.wouldClearOnClearPressed()
             return CalculatorOutput(
                 display: self.calculation.getLargeDisplayOutput(),
