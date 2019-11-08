@@ -230,9 +230,9 @@ class CalculatorStateMachineTests: XCTestCase {
         XCTAssertEqual(state.updateState(input: .dyadic(.plus)).display, "80")
         XCTAssertEqual(state.updateState(input: .numeral("1")).display, "1")
         XCTAssertEqual(state.updateState(input: .numeral("0")).display, "10")
-        XCTAssertEqual(state.updateState(input: .percent).display, "8")
+        XCTAssertEqual(state.updateState(input: .percent).display, "0.1")
         XCTAssertEqual(state.updateState(input: .equals).display, "88")
-        XCTAssertEqual(state.updateState(input: .equals).display, "96")
+        XCTAssertEqual(state.updateState(input: .equals).display, "96.8")
     }
     
     

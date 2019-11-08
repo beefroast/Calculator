@@ -11,13 +11,6 @@ import XCTest
 
 class ReverseSignStringExtensionTests: XCTestCase {
 
-    var state: ICalculator!
-    
-    override func setUp() {
-        self.state = CalculatorStateMachine()
-    }
-
-
     // MARK: - Numerals
     
     func testReversingSign() {

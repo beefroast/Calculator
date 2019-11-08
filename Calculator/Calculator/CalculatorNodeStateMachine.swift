@@ -256,20 +256,42 @@ indirect enum CalculationNode {
 
         case .dyadic(let lhs, let op, .some(let rhs)):
             
-            let a = try lhs.getCalculatedValue()
-            let b = try rhs.getCalculatedValue()
+            switch (op, rhs) {
             
-            switch op {
-            case .divide:
-                guard b != 0.0 else {
-                    throw CalculatorError.divisionByZero
+            case (.minus, .functional(.percent, let rhs)):
+                
+                // Special case, a number minus a percent is considered to be
+                // that number minus a percent of itself
+                
+                let a = try lhs.getCalculatedValue()
+                let b = try rhs.getCalculatedValue()
+                return a - (a*b/100.0)
+                
+            case (.plus, .functional(.percent, let rhs)):
+                
+                // Special case, a number plus a percent is considered to be
+                // that number plus a percent of itself
+                
+                let a = try lhs.getCalculatedValue()
+                let b = try rhs.getCalculatedValue()
+                return a + (a*b/100.0)
+                
+            default:
+                let a = try lhs.getCalculatedValue()
+                let b = try rhs.getCalculatedValue()
+                
+                switch op {
+                case .divide:
+                    guard b != 0.0 else {
+                        throw CalculatorError.divisionByZero
+                    }
+                    return a/b
+                case .minus: return a-b
+                case .multiply: return a*b
+                case .plus: return a+b
                 }
-                return a/b
-            case .minus: return a-b
-            case .multiply: return a*b
-            case .plus: return a+b
             }
-            
+
         case .functional(.percent, let node):
             return try node.getCalculatedValue() / 100.0
             
