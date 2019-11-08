@@ -57,6 +57,27 @@ class CalculatorStateMachine: ICalculator {
     */
     func updateState(input: CalculatorInput) -> CalculatorOutput {
     
+        let s = _updateState(input: input)
+        switch self.state {
+//        case .inputtingFirstNumber(let a): return s.with(calculation: a)
+//        case .inputtedDyadic(let a, let op): return s.with(calculation: a + symbolForDyadic(op: op))
+//        case .inputtingSecondNumber(let a, let op, let b): return s.with(calculation: a + symbolForDyadic(op: op) + b)
+//        case .showingResult(let a, let op, let b): return s.with(calculation: a + symbolForDyadic(op: op) + b)
+        default: return s
+        }
+    }
+
+    func symbolForDyadic(op: DyadicOperator) -> String {
+        switch op {
+        case .divide: return "÷"
+        case .minus: return "−"
+        case .multiply: return "×"
+        case .plus: return "+"
+        }
+    }
+    
+    func _updateState(input: CalculatorInput) -> CalculatorOutput {
+    
         do {
             switch input {
             case .numeral(let numeral): return self.handle(numeral: numeral)
@@ -71,6 +92,8 @@ class CalculatorStateMachine: ICalculator {
             return CalculatorOutput(display: "Error")
         }
     }
+    
+    
     
     /**
         Handler for numerical input.
