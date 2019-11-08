@@ -163,6 +163,15 @@ class CalculatorStateMachineTests: XCTestCase {
         XCTAssertEqual(state.updateState(input: .equals).display, "2")
     }
     
+    func testPressingOperatorWithoutInputShouldPrefixZero() {
+        XCTAssertEqual(state.updateState(input: .dyadic(.plus)).calculation, "0 + ")
+    }
+    
+    func testEqualsAfterOperator() {
+        XCTAssertEqual(state.updateState(input: .dyadic(.plus)).calculation, "0 + ")
+
+    }
+    
     // MARK: - Test combinations
     
 

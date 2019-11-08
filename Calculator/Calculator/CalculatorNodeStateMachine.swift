@@ -212,14 +212,27 @@ indirect enum CalculationNode {
     func getCalculatedValueAsRoundedString() -> String {
         
         do {
-            let stringValue = try String(self.getCalculatedValue())
             
-            // Remove the trailing .0 if we've got an integer value
-             if stringValue.suffix(2) == ".0" {
-                 return String(stringValue.dropLast(2))
-             } else {
-                 return stringValue
-             }
+            let value = try self.getCalculatedValue()
+            
+            var stringValue = String(value)
+            
+            if stringValue.hasSuffix(".0") {
+                stringValue = String(stringValue.dropLast(2))
+            }
+
+            if stringValue.count > 12 {
+                let numFormat = NumberFormatter.init()
+                numFormat.usesSignificantDigits = true
+                numFormat.maximumSignificantDigits = 8
+                numFormat.numberStyle = .scientific
+                stringValue = numFormat.string(from: NSNumber.init(value: value)) ?? stringValue
+            }
+            
+            
+            
+            return stringValue
+            
         } catch {
             return "Error"
         }
