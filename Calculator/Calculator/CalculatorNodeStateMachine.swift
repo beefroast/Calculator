@@ -97,7 +97,8 @@ indirect enum CalculationNode {
         case .functional(.reverseSign, let node):
             return node
             
-        case .numeral("0"):
+        case .numeral("0"): fallthrough
+        case .numeral("0."):
             return self
             
         case .dyadic(let lhs, let op, .some(let rhs)):
@@ -112,7 +113,15 @@ indirect enum CalculationNode {
     }
     
     func handlePercent() -> CalculationNode {
-        return .functional(.percent, self)
+        
+        switch self {
+            
+        case .dyadic(let lhs, let op, let rhs):
+            return .dyadic(lhs, op, rhs?.handlePercent())
+            
+        default:
+            return .functional(.percent, self)
+        }
     }
     
     func handleEquals() -> CalculationNode {
@@ -121,8 +130,20 @@ indirect enum CalculationNode {
         case .result(.dyadic(let lhs, let op, .some(let rhs))):
             return .result(.dyadic(.dyadic(lhs, op, rhs), op, rhs))
             
+        case .result(_):
+            return self
+            
         default:
             return .result(self)
+        }
+    }
+    
+    
+    func wouldClearOnClearPressed() -> Bool {
+        switch self {
+        case .result(_): return true
+        case .numeral(_): return true
+        default: return false
         }
     }
     
@@ -134,7 +155,7 @@ indirect enum CalculationNode {
             
         case .dyadic(let lhs, let op, .none):
             return lhs
-            
+        
         case .dyadic(let lhs, let op, .some(let rhs)):
             return .dyadic(lhs, op, nil)
             
@@ -145,6 +166,32 @@ indirect enum CalculationNode {
             return .numeral("0")
             
         }
+    }
+    
+    func debugDisplay() -> String {
+        
+        switch self {
+            
+            case .numeral(let num):
+                return num
+                
+            case .dyadic(let lhs, let op, let rhs):
+                return "(\(lhs.debugDisplay()) \(symbolForDyadic(op: op)) \(rhs?.debugDisplay() ?? "nil"))"
+                
+            case .functional(.reverseSign, let node):
+                return "-(\(node.debugDisplay()))"
+                
+            case .functional(.percent, .numeral(let num)):
+                return "(\(num)%)"
+                
+            case .functional(.percent, let node):
+                return "(\(node.debugDisplay()))%"
+                
+            case .result(let node):
+                return "(\(node.debugDisplay()))"
+                
+        }
+        
     }
     
     func display(isRootNode: Bool = false) -> String {
@@ -159,6 +206,9 @@ indirect enum CalculationNode {
             
         case .functional(.reverseSign, let node):
             return "-\(node.display())"
+            
+        case .functional(.percent, .numeral(let num)):
+            return "\(num)%"
             
         case .functional(.percent, let node):
             return "(\(node.display()))%"
@@ -198,8 +248,9 @@ indirect enum CalculationNode {
             }
             return value
         
-        case .dyadic(let lhs, let op, .none): return try lhs.getValue()
-            
+        case .dyadic(let lhs, let op, .none):
+            return try lhs.getValue()
+
         case .dyadic(let lhs, let op, .some(let rhs)):
             
             let a = try lhs.getValue()
@@ -231,7 +282,11 @@ indirect enum CalculationNode {
     func getDisplayedValue(isRootNode: Bool = false) -> String {
         switch self {
         
-        case .numeral(let num): return num
+        case .numeral("0"):
+            return ""
+            
+        case .numeral(let num):
+            return num
             
         case .dyadic(let lhs, _, .none):
             return lhs.getValueString()
@@ -247,6 +302,9 @@ indirect enum CalculationNode {
         }
     }
     
+    
+    
+    
     func symbolForDyadic(op: DyadicOperator) -> String {
         switch op {
         case .divide: return "÷"
@@ -256,23 +314,59 @@ indirect enum CalculationNode {
         }
     }
     
+    
 }
 
 
 class CalculatorNodeStateMachine: ICalculator {
     
     var calculation: CalculationNode = .numeral("0")
+    var wasLastInputClear: Bool = false
     
     func updateState(input: CalculatorInput) -> CalculatorOutput {
         
-        self.calculation = calculation.apply(input: input)
+        switch (input, wasLastInputClear) {
+            
+        case (.clear, true):
+            self.wasLastInputClear = true
+            self.calculation = .numeral("0")
+            return CalculatorOutput(
+                display: "0",
+                clearButtonText: "AC",
+                calculation: self.calculation.display(isRootNode: true)
+            )
         
-        return CalculatorOutput(
-            display: "\(self.calculation.getDisplayedValue())",
-            clearButtonText: "C",
-            highlightedButton: nil,
-            calculation: self.calculation.display(isRootNode: true)
-        )
+        case (.clear, false):
+            wasLastInputClear = true
+            self.calculation = calculation.apply(input: input)
+            
+            switch self.calculation {
+            case .result(_):
+                return CalculatorOutput(
+                    display: calculation.getDisplayedValue(),
+                    clearButtonText: "AC",
+                    calculation: self.calculation.display(isRootNode: true)
+                )
+            default:
+                return CalculatorOutput(
+                    display: "0",
+                    clearButtonText: "AC",
+                    calculation: self.calculation.display(isRootNode: true)
+                )
+            }
+            
+        default:
+            wasLastInputClear = false
+            self.calculation = calculation.apply(input: input)
+            let wouldClear = self.calculation.wouldClearOnClearPressed()
+            return CalculatorOutput(
+                display: self.calculation.getDisplayedValue(),
+                clearButtonText: wouldClear ? "AC" : "C",
+                calculation: self.calculation.display(isRootNode: true)
+            )
+            
+        }
+
     }
     
 }

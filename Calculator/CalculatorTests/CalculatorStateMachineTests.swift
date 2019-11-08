@@ -190,8 +190,8 @@ class CalculatorStateMachineTests: XCTestCase {
     
     func testReverseSignAfterDecimal() {
         XCTAssertEqual(state.updateState(input: .numeral(".")).display, "0.")
-        XCTAssertEqual(state.updateState(input: .reverseSign).display, "0")
-        XCTAssertEqual(state.updateState(input: .numeral("2")).display, "2")
+        XCTAssertEqual(state.updateState(input: .reverseSign).display, "0.")
+        XCTAssertEqual(state.updateState(input: .numeral("2")).display, "0.2")
     }
     
     func testReverseSignOnSecondValue() {
@@ -220,8 +220,8 @@ class CalculatorStateMachineTests: XCTestCase {
         XCTAssertEqual(state.updateState(input: .dyadic(.multiply)).display, "80")
         XCTAssertEqual(state.updateState(input: .numeral("1")).display, "1")
         XCTAssertEqual(state.updateState(input: .numeral("0")).display, "10")
-        XCTAssertEqual(state.updateState(input: .percent).display, "8")
-        XCTAssertEqual(state.updateState(input: .equals).display, "640")
+        XCTAssertEqual(state.updateState(input: .percent).display, "0.1")
+        XCTAssertEqual(state.updateState(input: .equals).display, "8")
     }
     
     func testPercentAfterAddition() {
@@ -238,59 +238,14 @@ class CalculatorStateMachineTests: XCTestCase {
     
     // MARK: - Test Highlighting
     
-    func testOperatorIsHighlighted() {
-        XCTAssertEqual(state.updateState(input: .dyadic(.plus)).highlightedButton, .plus)
-        XCTAssertEqual(state.updateState(input: .dyadic(.minus)).highlightedButton, .minus)
-        XCTAssertEqual(state.updateState(input: .dyadic(.multiply)).highlightedButton, .multiply)
-        XCTAssertEqual(state.updateState(input: .dyadic(.divide)).highlightedButton, .divide)
-    }
-    
-    func testOperatorIsHighlightedUntilEquals() {
-        XCTAssertEqual(state.updateState(input: .numeral("2")).highlightedButton, nil)
-        XCTAssertEqual(state.updateState(input: .dyadic(.plus)).highlightedButton, .plus)
-        XCTAssertEqual(state.updateState(input: .numeral("2")).highlightedButton, .plus)
-        XCTAssertEqual(state.updateState(input: .equals).highlightedButton, nil)
-    }
-    
-    func testRunonOperatorHighlighting() {
-        XCTAssertEqual(state.updateState(input: .numeral("2")).highlightedButton, nil)
-        XCTAssertEqual(state.updateState(input: .dyadic(.plus)).highlightedButton, .plus)
-        XCTAssertEqual(state.updateState(input: .numeral("2")).highlightedButton, .plus)
-        XCTAssertEqual(state.updateState(input: .dyadic(.minus)).highlightedButton, .minus)
-        XCTAssertEqual(state.updateState(input: .numeral("1")).highlightedButton, .minus)
-        XCTAssertEqual(state.updateState(input: .equals).highlightedButton, nil)
-    }
     
     // MARK: - Test errors
-    
-    func testPushingInvalidCharacters() {
-        XCTAssertEqual(state.updateState(input: .numeral("2")).display, "2")
-        XCTAssertEqual(state.updateState(input: .numeral("c")).display, "2c")
-        XCTAssertEqual(state.updateState(input: .dyadic(.plus)).display, "2c")
-        XCTAssertEqual(state.updateState(input: .numeral("3")).display, "3")
-        XCTAssertEqual(state.updateState(input: .equals).display, "Error")
-    }
-    
+
     func testDividingByZero() {
         XCTAssertEqual(state.updateState(input: .numeral("2")).display, "2")
         XCTAssertEqual(state.updateState(input: .dyadic(.divide)).display, "2")
         XCTAssertEqual(state.updateState(input: .numeral("0")).display, "0")
         XCTAssertEqual(state.updateState(input: .equals).display, "Error")
-    }
-    
-    func testErrorNothingInputable() {
-        XCTAssertEqual(state.updateState(input: .numeral("2")).display, "2")
-        XCTAssertEqual(state.updateState(input: .dyadic(.divide)).display, "2")
-        XCTAssertEqual(state.updateState(input: .numeral("0")).display, "0")
-        XCTAssertEqual(state.updateState(input: .equals).display, "Error")
-        XCTAssertEqual(state.updateState(input: .numeral("8")).display, "Error")
-        XCTAssertEqual(state.updateState(input: .numeral("0")).display, "Error")
-        XCTAssertEqual(state.updateState(input: .numeral(".")).display, "Error")
-        XCTAssertEqual(state.updateState(input: .dyadic(.divide)).display, "Error")
-        XCTAssertEqual(state.updateState(input: .percent).display, "Error")
-        XCTAssertEqual(state.updateState(input: .reverseSign).display, "Error")
-        XCTAssertEqual(state.updateState(input: .equals).display, "Error")
-        XCTAssertEqual(state.updateState(input: .clear).display, "0")
     }
     
     
