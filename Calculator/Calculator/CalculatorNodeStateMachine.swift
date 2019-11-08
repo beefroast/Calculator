@@ -33,9 +33,20 @@ indirect enum CalculationNode {
     
     func handle(numeral: String) -> CalculationNode {
         switch self {
-            
+                
         case .numeral(let existing):
-            return CalculationNode.numeral(existing + numeral)
+            
+            switch (existing, numeral) {
+            case ("0", "0"): return self
+            case ("0", "."): return .numeral("0.")
+            case ("0", let input): return .numeral(input)
+            case (let e, let b):
+                if e.contains(".") && b.contains(".") {
+                    return self
+                } else {
+                    return .numeral(e + b)
+                }
+            }
             
         case .dyadic(let lhs, let op, .none):
             return CalculationNode.dyadic(lhs, op, .numeral(numeral))
@@ -56,6 +67,14 @@ indirect enum CalculationNode {
             
         case .dyadic(let lhs, _, .none):
             return CalculationNode.dyadic(lhs, dyadic, nil)
+            
+        case .dyadic(let lhs, let op, .some(let rhs)):
+            
+            if dyadic == .divide || dyadic == .multiply {
+                return .dyadic(lhs, op, .dyadic(rhs, dyadic, nil))
+            } else {
+                return CalculationNode.dyadic(self, dyadic, nil)
+            }
         
         default:
             return CalculationNode.dyadic(self, dyadic, nil)
@@ -79,7 +98,14 @@ indirect enum CalculationNode {
     }
     
     func handleEquals() -> CalculationNode {
-        return .result(self)
+        switch self {
+        
+        case .result(.dyadic(let lhs, let op, .some(let rhs))):
+            return .result(.dyadic(.dyadic(lhs, op, rhs), op, rhs))
+            
+        default:
+            return .result(self)
+        }
     }
     
     func handleClear() -> CalculationNode {
@@ -109,6 +135,17 @@ indirect enum CalculationNode {
                 return "(\(node.display()))"
             }
         }
+    }
+    
+    func getValueString() -> String {
+        let stringValue = String(self.getValue())
+        
+        // Remove the trailing .0 if we've got an integer value
+         if stringValue.suffix(2) == ".0" {
+             return String(stringValue.dropLast(2))
+         } else {
+             return stringValue
+         }
     }
     
     func getValue() -> Double {
@@ -145,12 +182,14 @@ indirect enum CalculationNode {
         case .numeral(let num): return num
             
         case .dyadic(let lhs, let op, .none):
-            return "\(lhs.getValue())"
+            return lhs.getValueString()
             
         case .dyadic(let lhs, let op, .some(let rhs)):
             return rhs.getDisplayedValue()
             
-        case .result(let node): return "\(node.getValue())"
+        case .result(let node): return node.getValueString()
+            
+            
         default: return ""
         }
     }
