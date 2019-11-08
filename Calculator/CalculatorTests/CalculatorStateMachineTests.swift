@@ -95,6 +95,28 @@ class CalculatorStateMachineTests: XCTestCase {
         XCTAssertEqual(state.updateState(input: .equals).display, "2")
     }
     
+    func testRunOnSubtraction() {
+        XCTAssertEqual(state.updateState(input: .numeral("8")).display, "8")
+        XCTAssertEqual(state.updateState(input: .dyadic(.minus)).display, "8")
+        XCTAssertEqual(state.updateState(input: .numeral("1")).display, "1")
+        XCTAssertEqual(state.updateState(input: .dyadic(.minus)).display, "7")
+        XCTAssertEqual(state.updateState(input: .numeral("1")).display, "1")
+        XCTAssertEqual(state.updateState(input: .dyadic(.minus)).display, "6")
+    }
+    
+    func testOrderOfOperationsWithRunOnSubtraction() {
+        XCTAssertEqual(state.updateState(input: .numeral("2")).display, "2")
+        XCTAssertEqual(state.updateState(input: .dyadic(.plus)).display, "2")
+        XCTAssertEqual(state.updateState(input: .numeral("2")).display, "2")
+        XCTAssertEqual(state.updateState(input: .dyadic(.multiply)).display, "2")
+        XCTAssertEqual(state.updateState(input: .numeral("3")).display, "3")
+        XCTAssertEqual(state.updateState(input: .dyadic(.minus)).display, "8")
+        XCTAssertEqual(state.updateState(input: .dyadic(.minus)).display, "8")
+        XCTAssertEqual(state.updateState(input: .numeral("1")).display, "1")
+        XCTAssertEqual(state.updateState(input: .dyadic(.minus)).display, "7")
+        XCTAssertEqual(state.updateState(input: .numeral("1")).display, "1")
+        XCTAssertEqual(state.updateState(input: .dyadic(.minus)).display, "6")
+    }
     
     func testTwoResultsBackToBack() {
         XCTAssertEqual(state.updateState(input: .numeral("2")).display, "2")
@@ -122,6 +144,23 @@ class CalculatorStateMachineTests: XCTestCase {
         XCTAssertEqual(state.updateState(input: .dyadic(.multiply)).display, "3")
         XCTAssertEqual(state.updateState(input: .numeral("4")).display, "4")
         XCTAssertEqual(state.updateState(input: .equals).display, "14")
+    }
+    
+    func testOperationOfApplicationDivision() {
+        XCTAssertEqual(state.updateState(input: .numeral("2")).display, "2")
+        XCTAssertEqual(state.updateState(input: .dyadic(.plus)).display, "2")
+        XCTAssertEqual(state.updateState(input: .numeral("1")).display, "1")
+        XCTAssertEqual(state.updateState(input: .numeral("0")).display, "10")
+        XCTAssertEqual(state.updateState(input: .dyadic(.divide)).display, "10")
+        XCTAssertEqual(state.updateState(input: .numeral("5")).display, "5")
+        XCTAssertEqual(state.updateState(input: .equals).display, "4")
+    }
+    
+    func testEqualsDoesNotMuchAfterAlreadyPressedWithoutDyadic() {
+        XCTAssertEqual(state.updateState(input: .numeral("2")).display, "2")
+        XCTAssertEqual(state.updateState(input: .equals).display, "2")
+        XCTAssertEqual(state.updateState(input: .equals).display, "2")
+        XCTAssertEqual(state.updateState(input: .equals).display, "2")
     }
     
     // MARK: - Test combinations
@@ -183,6 +222,42 @@ class CalculatorStateMachineTests: XCTestCase {
         XCTAssertEqual(state.updateState(input: .equals).display, "11")
     }
     
+    func testDoubleClear() {
+        XCTAssertEqual(state.updateState(input: .numeral("2")).display, "2")
+        XCTAssertEqual(state.updateState(input: .dyadic(.plus)).display, "2")
+        XCTAssertEqual(state.updateState(input: .numeral("7")).display, "7")
+        XCTAssertEqual(state.updateState(input: .clear).display, "0")
+        XCTAssertEqual(state.updateState(input: .clear).calculation, "")
+    }
+    
+    func testClearAfterFunctionalOperator() {
+        XCTAssertEqual(state.updateState(input: .numeral("2")).display, "2")
+        XCTAssertEqual(state.updateState(input: .percent).display, "0.02")
+        XCTAssertEqual(state.updateState(input: .clear).display, "2")
+    }
+    
+    func testClearingOperator() {
+        XCTAssertEqual(state.updateState(input: .numeral("2")).calculation, "2")
+        XCTAssertEqual(state.updateState(input: .dyadic(.plus)).calculation, "2 + ")
+        XCTAssertEqual(state.updateState(input: .clear).calculation, "2")
+    }
+    
+    func testClearResult() {
+        XCTAssertEqual(state.updateState(input: .numeral("2")).display, "2")
+        XCTAssertEqual(state.updateState(input: .dyadic(.plus)).display, "2")
+        XCTAssertEqual(state.updateState(input: .numeral("2")).display, "2")
+        XCTAssertEqual(state.updateState(input: .equals).display, "4")
+        XCTAssertEqual(state.updateState(input: .clear).calculation, "")
+    }
+    
+    func testClearBackToPreviousOperator() {
+        XCTAssertEqual(state.updateState(input: .numeral("2")).display, "2")
+        XCTAssertEqual(state.updateState(input: .dyadic(.plus)).display, "2")
+        XCTAssertEqual(state.updateState(input: .numeral("3")).display, "3")
+        XCTAssertEqual(state.updateState(input: .dyadic(.plus)).display, "5")
+        XCTAssertEqual(state.updateState(input: .clear).display, "3")
+    }
+    
     // MARK: - Reverse sign
     
     func testReverseSign() {
@@ -219,6 +294,13 @@ class CalculatorStateMachineTests: XCTestCase {
         XCTAssertEqual(state.updateState(input: .equals).display, "-1")
     }
 
+    func testReverseAfterOperator() {
+        XCTAssertEqual(state.updateState(input: .numeral("2")).display, "2")
+        XCTAssertEqual(state.updateState(input: .dyadic(.plus)).display, "2")
+        XCTAssertEqual(state.updateState(input: .reverseSign).display, "2")
+        XCTAssertEqual(state.updateState(input: .numeral("3")).display, "3")
+    }
+    
 
     // MARK: - Test Percent
     
@@ -252,7 +334,25 @@ class CalculatorStateMachineTests: XCTestCase {
         XCTAssertEqual(state.updateState(input: .equals).display, "96.8")
     }
     
+    func testSpecialPercentSubtractionCase() {
+        XCTAssertEqual(state.updateState(input: .numeral("8")).display, "8")
+        XCTAssertEqual(state.updateState(input: .numeral("0")).display, "80")
+        XCTAssertEqual(state.updateState(input: .dyadic(.minus)).display, "80")
+        XCTAssertEqual(state.updateState(input: .numeral("1")).display, "1")
+        XCTAssertEqual(state.updateState(input: .numeral("0")).display, "10")
+        XCTAssertEqual(state.updateState(input: .percent).display, "0.1")
+        XCTAssertEqual(state.updateState(input: .equals).display, "72")
+    }
     
+    func testPercentAfterEqualsCalculation() {
+        XCTAssertEqual(state.updateState(input: .numeral("5")).display, "5")
+        XCTAssertEqual(state.updateState(input: .numeral("0")).display, "50")
+        XCTAssertEqual(state.updateState(input: .dyadic(.plus)).display, "50")
+        XCTAssertEqual(state.updateState(input: .numeral("5")).display, "5")
+        XCTAssertEqual(state.updateState(input: .numeral("0")).display, "50")
+        XCTAssertEqual(state.updateState(input: .equals).display, "100")
+        XCTAssertEqual(state.updateState(input: .percent).calculation, "(50 + 50)%")
+    }
     
     
     // MARK: - Test errors
@@ -264,7 +364,12 @@ class CalculatorStateMachineTests: XCTestCase {
         XCTAssertEqual(state.updateState(input: .equals).display, "Error")
     }
     
-    
+    func testInvalidInput() {
+        XCTAssertEqual(state.updateState(input: .numeral("2")).display, "2")
+        XCTAssertEqual(state.updateState(input: .dyadic(.divide)).display, "2")
+        XCTAssertEqual(state.updateState(input: .numeral("Kittens")).display, "Kittens")
+        XCTAssertEqual(state.updateState(input: .equals).display, "Error")
+    }
     
     
 }

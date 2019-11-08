@@ -178,34 +178,6 @@ indirect enum CalculationNode {
         }
     }
     
-    func debugCalculationDisplay() -> String {
-        
-        switch self {
-             
-         case .numeral("0"):
-             return "0"
-             
-         case .numeral(let num):
-             return num
-             
-         case .dyadic(let lhs, let op, let rhs):
-             return "(\(lhs.debugCalculationDisplay()) \(symbolForDyadic(op: op)) \(rhs?.debugCalculationDisplay() ?? "nil"))"
-             
-         case .functional(.reverseSign, let node):
-             return "(-\(node.debugCalculationDisplay()))"
-             
-         case .functional(.percent, .numeral(let num)):
-             return "(\(num)%)"
-             
-         case .functional(.percent, let node):
-             return "(\(node.debugCalculationDisplay())%)"
-             
-         case .result(let node):
-                 return "(\(node.debugCalculationDisplay()))"
-             }
-         
-    }
-    
     func getCalculationDisplay(isRootNode: Bool = false) -> String {
         
         switch self {
@@ -263,7 +235,8 @@ indirect enum CalculationNode {
             }
             return value
         
-        case .dyadic(let lhs, let op, .none):
+        case .dyadic(let lhs, _, .none):
+            // NOTE: This is never entered
             return try lhs.getCalculatedValue()
 
         case .dyadic(let lhs, let op, .some(let rhs)):
@@ -365,8 +338,6 @@ class CalculatorNodeStateMachine: ICalculator {
             self.wasLastInputClear = true
             self.calculation = .numeral("0")
             
-            print(calculation.debugCalculationDisplay())
-            
             return CalculatorOutput(
                 display: "0",
                 clearButtonText: "AC",
@@ -376,9 +347,7 @@ class CalculatorNodeStateMachine: ICalculator {
         case (.clear, false):
             wasLastInputClear = true
             self.calculation = calculation.apply(input: input)
-            
-            print(calculation.debugCalculationDisplay())
-            
+                    
             switch self.calculation {
                 
             case .dyadic(_, _, .none):
@@ -400,9 +369,7 @@ class CalculatorNodeStateMachine: ICalculator {
         default:
             wasLastInputClear = false
             self.calculation = calculation.apply(input: input)
-            
-            print(calculation.debugCalculationDisplay())
-            
+                        
             let wouldClear = self.calculation.wouldClearOnClearPressed()
             return CalculatorOutput(
                 display: self.calculation.getLargeDisplayOutput(),
