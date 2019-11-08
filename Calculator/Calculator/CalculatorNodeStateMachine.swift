@@ -54,7 +54,11 @@ indirect enum CalculationNode {
             }
             
         case .dyadic(let lhs, let op, .none):
-            return CalculationNode.dyadic(lhs, op, .numeral(numeral))
+            if numeral == "." {
+                return CalculationNode.dyadic(lhs, op, .numeral("0."))
+            } else {
+                return CalculationNode.dyadic(lhs, op, .numeral(numeral))
+            }
             
         case .dyadic(let lhs, let op, .some(let rhs)):
             return CalculationNode.dyadic(lhs, op, rhs.handle(numeral: numeral))
@@ -114,7 +118,24 @@ indirect enum CalculationNode {
     }
     
     func handleClear() -> CalculationNode {
-        return .numeral("0")
+        switch self {
+            
+        case .numeral(_):
+            return .numeral("0")
+            
+        case .dyadic(let lhs, let op, .none):
+            return lhs
+            
+        case .dyadic(let lhs, let op, .some(let rhs)):
+            return .dyadic(lhs, op, nil)
+            
+        case .functional(_, let node):
+            return node
+            
+        case .result(_):
+            return .numeral("0")
+            
+        }
     }
     
     func display(isRootNode: Bool = false) -> String {
@@ -211,8 +232,9 @@ indirect enum CalculationNode {
             
         case .result(let node): return node.getValueString()
             
-            
-        default: return ""
+        case .functional(_):
+            return self.getValueString()
+
         }
     }
     
