@@ -93,9 +93,18 @@ indirect enum CalculationNode {
     func handleReverseSign() -> CalculationNode {
         
         switch self {
-            
+                
         case .functional(.reverseSign, let node):
             return node
+            
+        case .numeral("0"):
+            return self
+            
+        case .dyadic(let lhs, let op, .some(let rhs)):
+            return .dyadic(lhs, op, rhs.handleReverseSign())
+            
+        case .dyadic(_, _, .none):
+            return self
             
         default:
             return .functional(.reverseSign, self)
@@ -149,7 +158,7 @@ indirect enum CalculationNode {
             return "\(lhs.display()) \(symbolForDyadic(op: op)) \(rhs?.display() ?? "")"
             
         case .functional(.reverseSign, let node):
-            return "-(\(node.display()))"
+            return "-\(node.display())"
             
         case .functional(.percent, let node):
             return "(\(node.display()))%"
