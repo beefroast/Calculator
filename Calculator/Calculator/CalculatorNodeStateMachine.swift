@@ -195,7 +195,7 @@ indirect enum CalculationNode {
         switch self {
             
         case .numeral("0"):
-            return ""
+            return isRootNode ? "" : "0"
             
         case .numeral(let num):
             return num
@@ -361,16 +361,18 @@ class CalculatorNodeStateMachine: ICalculator {
             
         case (.clear, true):
             self.wasLastInputClear = true
+            
             self.calculation = .numeral("0")
             
             return CalculatorOutput(
                 display: "0",
                 clearButtonText: "AC",
-                calculation: self.calculation.getCalculationDisplay(isRootNode: true)
+                calculation: ""
             )
         
         case (.clear, false):
             wasLastInputClear = true
+            
             self.calculation = calculation.apply(input: input)
             return CalculatorOutput(
                 display: calculation.getLargeDisplayOutput(),

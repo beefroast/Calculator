@@ -475,7 +475,7 @@
                                     </mask>
                                 </variation>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="400" verticalCompressionResistancePriority="900" text="0000000000000" textAlignment="right" lineBreakMode="tailTruncation" minimumScaleFactor="0.20000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="YCa-EF-COG" customClass="CopyableLabel" customModule="Calculator" customModuleProvider="target">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="400" verticalCompressionResistancePriority="900" text="0" textAlignment="right" lineBreakMode="tailTruncation" minimumScaleFactor="0.20000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="YCa-EF-COG" customClass="CopyableLabel" customModule="Calculator" customModuleProvider="target">
                                 <rect key="frame" x="20" y="68" width="280" height="93.5"/>
                                 <accessibility key="accessibilityConfiguration" identifier="Display"/>
                                 <fontDescription key="fontDescription" name="Menlo-Regular" family="Menlo" pointSize="80"/>
