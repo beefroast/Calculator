@@ -347,24 +347,11 @@ class CalculatorNodeStateMachine: ICalculator {
         case (.clear, false):
             wasLastInputClear = true
             self.calculation = calculation.apply(input: input)
-                    
-            switch self.calculation {
-                
-            case .dyadic(_, _, .none):
-                return CalculatorOutput(
-                    display: "0",
-                    clearButtonText: "AC",
-                    calculation: self.calculation.getCalculationDisplay(isRootNode: true)
-                )
-                
-            default:
-                return CalculatorOutput(
-                    display: calculation.getLargeDisplayOutput(),
-                    clearButtonText: "AC",
-                    calculation: self.calculation.getCalculationDisplay(isRootNode: true)
-                )
-
-            }
+            return CalculatorOutput(
+                display: calculation.getLargeDisplayOutput(),
+                clearButtonText: "AC",
+                calculation: self.calculation.getCalculationDisplay(isRootNode: true)
+            )
             
         default:
             wasLastInputClear = false
