@@ -168,8 +168,9 @@ class CalculatorStateMachineTests: XCTestCase {
     }
     
     func testEqualsAfterOperator() {
-        XCTAssertEqual(state.updateState(input: .dyadic(.plus)).calculation, "0 + ")
-
+        XCTAssertEqual(state.updateState(input: .numeral("2")).calculation, "2")
+        XCTAssertEqual(state.updateState(input: .dyadic(.plus)).calculation, "2 + ")
+        XCTAssertEqual(state.updateState(input: .equals).calculation, "2 + ")
     }
     
     // MARK: - Test combinations

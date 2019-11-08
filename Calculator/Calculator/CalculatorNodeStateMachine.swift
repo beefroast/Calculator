@@ -133,6 +133,14 @@ indirect enum CalculationNode {
     }
     
 
+    func isEquatable() -> Bool {
+        switch self {
+        case .numeral(_): return true
+        case .result(_): return true
+        case .functional(_, _): return true
+        case .dyadic(let lhs, _, let rhs): return (rhs?.isEquatable() ?? false) && lhs.isEquatable()
+        }
+    }
     
     func handleEquals() -> CalculationNode {
         switch self {
@@ -144,7 +152,11 @@ indirect enum CalculationNode {
             return self
             
         default:
-            return .result(self)
+            if self.isEquatable() {
+                return .result(self)
+            } else {
+                return self
+            }
         }
     }
     
