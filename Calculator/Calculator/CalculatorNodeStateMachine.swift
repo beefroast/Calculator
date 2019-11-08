@@ -157,7 +157,7 @@ indirect enum CalculationNode {
             return lhs
         
         case .dyadic(let lhs, let op, .some(let rhs)):
-            return .dyadic(lhs, op, nil)
+            return .dyadic(lhs, op, rhs.handleClear())
             
         case .functional(_, let node):
             return node
@@ -194,38 +194,41 @@ indirect enum CalculationNode {
         
     }
     
-    func display(isRootNode: Bool = false) -> String {
+    func getCalculationDisplay(isRootNode: Bool = false) -> String {
         
         switch self {
+            
+        case .numeral("0"):
+            return ""
             
         case .numeral(let num):
             return num
             
         case .dyadic(let lhs, let op, let rhs):
-            return "\(lhs.display()) \(symbolForDyadic(op: op)) \(rhs?.display() ?? "")"
+            return "\(lhs.getCalculationDisplay()) \(symbolForDyadic(op: op)) \(rhs?.getCalculationDisplay() ?? "")"
             
         case .functional(.reverseSign, let node):
-            return "-\(node.display())"
+            return "-\(node.getCalculationDisplay())"
             
         case .functional(.percent, .numeral(let num)):
             return "\(num)%"
             
         case .functional(.percent, let node):
-            return "(\(node.display()))%"
+            return "\(node.getCalculationDisplay())%"
             
         case .result(let node):
             if isRootNode {
-                return "\(node.display()) ="
+                return "\(node.getCalculationDisplay()) ="
             } else {
-                return "(\(node.display()))"
+                return "(\(node.getCalculationDisplay()))"
             }
         }
     }
     
-    func getValueString() -> String {
+    func getCalculatedValueAsRoundedString() -> String {
         
         do {
-            let stringValue = try String(self.getValue())
+            let stringValue = try String(self.getCalculatedValue())
             
             // Remove the trailing .0 if we've got an integer value
              if stringValue.suffix(2) == ".0" {
@@ -238,7 +241,7 @@ indirect enum CalculationNode {
         }
     }
     
-    func getValue() throws -> Double {
+    func getCalculatedValue() throws -> Double {
         
         switch self {
         
@@ -249,12 +252,12 @@ indirect enum CalculationNode {
             return value
         
         case .dyadic(let lhs, let op, .none):
-            return try lhs.getValue()
+            return try lhs.getCalculatedValue()
 
         case .dyadic(let lhs, let op, .some(let rhs)):
             
-            let a = try lhs.getValue()
-            let b = try rhs.getValue()
+            let a = try lhs.getCalculatedValue()
+            let b = try rhs.getCalculatedValue()
             
             switch op {
             case .divide:
@@ -268,36 +271,33 @@ indirect enum CalculationNode {
             }
             
         case .functional(.percent, let node):
-            return try node.getValue() / 100.0
+            return try node.getCalculatedValue() / 100.0
             
         case .functional(.reverseSign, let node):
-            return try -node.getValue()
+            return try -node.getCalculatedValue()
             
         case .result(let node):
-            return try node.getValue()
+            return try node.getCalculatedValue()
             
         }
     }
     
-    func getDisplayedValue(isRootNode: Bool = false) -> String {
+    func getLargeDisplayOutput(isRootNode: Bool = false) -> String {
         switch self {
-        
-        case .numeral("0"):
-            return ""
             
         case .numeral(let num):
             return num
             
         case .dyadic(let lhs, _, .none):
-            return lhs.getValueString()
+            return lhs.getCalculatedValueAsRoundedString()
             
         case .dyadic(let lhs, _, .some(let rhs)):
-            return rhs.getDisplayedValue()
+            return rhs.getLargeDisplayOutput()
             
-        case .result(let node): return node.getValueString()
+        case .result(let node): return node.getCalculatedValueAsRoundedString()
             
         case .functional(_):
-            return self.getValueString()
+            return self.getCalculatedValueAsRoundedString()
 
         }
     }
@@ -333,7 +333,7 @@ class CalculatorNodeStateMachine: ICalculator {
             return CalculatorOutput(
                 display: "0",
                 clearButtonText: "AC",
-                calculation: self.calculation.display(isRootNode: true)
+                calculation: self.calculation.getCalculationDisplay(isRootNode: true)
             )
         
         case (.clear, false):
@@ -341,18 +341,21 @@ class CalculatorNodeStateMachine: ICalculator {
             self.calculation = calculation.apply(input: input)
             
             switch self.calculation {
-            case .result(_):
-                return CalculatorOutput(
-                    display: calculation.getDisplayedValue(),
-                    clearButtonText: "AC",
-                    calculation: self.calculation.display(isRootNode: true)
-                )
-            default:
+                
+            case .dyadic(_, _, .none):
                 return CalculatorOutput(
                     display: "0",
                     clearButtonText: "AC",
-                    calculation: self.calculation.display(isRootNode: true)
+                    calculation: self.calculation.getCalculationDisplay(isRootNode: true)
                 )
+                
+            default:
+                return CalculatorOutput(
+                    display: calculation.getLargeDisplayOutput(),
+                    clearButtonText: "AC",
+                    calculation: self.calculation.getCalculationDisplay(isRootNode: true)
+                )
+
             }
             
         default:
@@ -360,9 +363,9 @@ class CalculatorNodeStateMachine: ICalculator {
             self.calculation = calculation.apply(input: input)
             let wouldClear = self.calculation.wouldClearOnClearPressed()
             return CalculatorOutput(
-                display: self.calculation.getDisplayedValue(),
+                display: self.calculation.getLargeDisplayOutput(),
                 clearButtonText: wouldClear ? "AC" : "C",
-                calculation: self.calculation.display(isRootNode: true)
+                calculation: self.calculation.getCalculationDisplay(isRootNode: true)
             )
             
         }
