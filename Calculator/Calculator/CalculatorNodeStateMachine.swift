@@ -15,6 +15,11 @@ enum FunctionalOperator {
 
 indirect enum CalculationNode {
     
+    enum CalculatorError: Error {
+        case invalidInput
+        case divisionByZero
+    }
+    
     case numeral(String)
     case dyadic(CalculationNode, DyadicOperator, CalculationNode?)
     case functional(FunctionalOperator, CalculationNode)
@@ -138,40 +143,57 @@ indirect enum CalculationNode {
     }
     
     func getValueString() -> String {
-        let stringValue = String(self.getValue())
         
-        // Remove the trailing .0 if we've got an integer value
-         if stringValue.suffix(2) == ".0" {
-             return String(stringValue.dropLast(2))
-         } else {
-             return stringValue
-         }
+        do {
+            let stringValue = try String(self.getValue())
+            
+            // Remove the trailing .0 if we've got an integer value
+             if stringValue.suffix(2) == ".0" {
+                 return String(stringValue.dropLast(2))
+             } else {
+                 return stringValue
+             }
+        } catch {
+            return "Error"
+        }
     }
     
-    func getValue() -> Double {
+    func getValue() throws -> Double {
         
         switch self {
         
-        case .numeral(let num): return Double(num)!
+        case .numeral(let num):
+            guard let value = Double(num) else {
+                throw CalculatorError.invalidInput
+            }
+            return value
         
-        case .dyadic(let lhs, let op, .none): return lhs.getValue()
+        case .dyadic(let lhs, let op, .none): return try lhs.getValue()
             
         case .dyadic(let lhs, let op, .some(let rhs)):
+            
+            let a = try lhs.getValue()
+            let b = try rhs.getValue()
+            
             switch op {
-            case .divide: return lhs.getValue() / rhs.getValue()
-            case .minus: return lhs.getValue() - rhs.getValue()
-            case .multiply: return lhs.getValue() * rhs.getValue()
-            case .plus: return lhs.getValue() + rhs.getValue()
+            case .divide:
+                guard b != 0.0 else {
+                    throw CalculatorError.divisionByZero
+                }
+                return a/b
+            case .minus: return a-b
+            case .multiply: return a*b
+            case .plus: return a+b
             }
             
         case .functional(.percent, let node):
-            return node.getValue() / 100.0
+            return try node.getValue() / 100.0
             
         case .functional(.reverseSign, let node):
-            return -node.getValue()
+            return try -node.getValue()
             
         case .result(let node):
-            return node.getValue()
+            return try node.getValue()
             
         }
     }
@@ -181,10 +203,10 @@ indirect enum CalculationNode {
         
         case .numeral(let num): return num
             
-        case .dyadic(let lhs, let op, .none):
+        case .dyadic(let lhs, _, .none):
             return lhs.getValueString()
             
-        case .dyadic(let lhs, let op, .some(let rhs)):
+        case .dyadic(let lhs, _, .some(let rhs)):
             return rhs.getDisplayedValue()
             
         case .result(let node): return node.getValueString()

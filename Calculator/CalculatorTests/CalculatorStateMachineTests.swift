@@ -14,7 +14,7 @@ class CalculatorStateMachineTests: XCTestCase {
     var state: ICalculator!
     
     override func setUp() {
-        self.state = CalculatorStateMachine()
+        self.state = CalculatorNodeStateMachine()
     }
 
 
