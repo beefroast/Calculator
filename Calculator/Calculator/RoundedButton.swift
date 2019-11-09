@@ -40,7 +40,14 @@ class RoundedButton: UIButton {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        self.layer.cornerRadius = min(self.frame.width, self.frame.height)/2.0
+        
+        let minCornerDimension = min(self.frame.width, self.frame.height)/2.0
+        
+        // Round the corners
+        self.layer.cornerRadius = minCornerDimension
+        
+        // Set the font appropriately
+        self.titleLabel?.font = self.titleLabel?.font.withSize(min(80, minCornerDimension))
     }
     
     private func updateColorsForState(state: UIControl.State) {

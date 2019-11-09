@@ -18,20 +18,8 @@ class CalculatorViewController: UIViewController {
     /// Label representing the calculator input/output
     @IBOutlet weak var labelOutput: UILabel?
     
-    /// Button that clears input/output
+    /// Clear button
     @IBOutlet weak var clearButton: UIButton?
-    
-    /// Button that perform addition
-    @IBOutlet weak var plusButton: UIButton?
-    
-    /// Button that performs subtraction
-    @IBOutlet weak var minusButton: UIButton?
-    
-    /// Button that performs multiplication
-    @IBOutlet weak var multiplyButton: UIButton?
-    
-    /// Button that performs division
-    @IBOutlet weak var divideButton: UIButton?
     
     /// The state of the calculator
     var state: ICalculator = CalculatorNodeStateMachine()
