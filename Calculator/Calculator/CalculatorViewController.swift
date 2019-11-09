@@ -24,6 +24,10 @@ class CalculatorViewController: UIViewController {
     /// The state of the calculator
     var state: ICalculator = CalculatorNodeStateMachine()
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     /**
      Updates the state of the ICalculator with the given input, and then applies the output to the view controller's UIControls.
      - Parameter input: The button pressed on the calculator.
