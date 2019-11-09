@@ -8,23 +8,128 @@
 
 import Foundation
 
-enum FunctionalOperator {
-    case percent
-    case reverseSign
-}
 
+
+/// Enum representing a node in a tree of calculations.
 indirect enum CalculationNode {
     
+    /// Error representing something going wrong in the process of calculating the value of the node.
     enum CalculatorError: Error {
+        
+        /// The input contained invalid characters and could not be converted to a number.
         case invalidInput
+        
+        /// Division by zero was attempted.
         case divisionByZero
     }
     
+    /// Functional operator, or an operator that acts on one input.
+    enum FunctionalOperator {
+        
+        /// Function operator percent sign, divides the value of the node by 100.
+        case percent
+        
+        /// Function operator reverse sign, reverses the sign of the child node.
+        case reverseSign
+    }
+    
+    /// Case that represents a numeral, the numeral is stored as a `String` to avoid losing precision.
     case numeral(String)
+    
+    /**
+     Case that represents a dyadic operator.
+     In that case of non commutitive operators, the first `CalculationNode` is treated as the left hand side.
+     */
     case dyadic(CalculationNode, DyadicOperator, CalculationNode?)
+    
+    /// Functional operator that acts on the given `CalculationNode`.
     case functional(FunctionalOperator, CalculationNode)
+    
+    /// Represents an indivisible tree of `CalculationNodes`. You can consider the node within to be contained in parenthesis.
     case result(CalculationNode)
     
+    // MARK: - Public functions
+
+    
+    /**
+     Tells you if the node would collapse to just a `.numeral("0")` if a clear input would happen.
+     - Returns: `Bool` that is true if clearing would reduce the node to `.numeral("0")`.
+     */
+    func wouldClearOnClearPressed() -> Bool {
+        switch self {
+        case .result(_): return true
+        case .numeral(_): return true
+        default: return false
+        }
+    }
+    
+    /**
+     Calculates what to display on the calculation display of the calculator.
+     - Parameter isRootNode: Should be true if the node is the root of the tree.
+     - Returns: `String` containing the value of the calculator calculation display.
+    */
+    func getCalculationDisplay(isRootNode: Bool = false) -> String {
+       
+       switch self {
+           
+       case .numeral("0"):
+           return isRootNode ? "" : "0"
+           
+       case .numeral(let num):
+           return num
+           
+       case .dyadic(let lhs, let op, let rhs):
+           return "\(lhs.getCalculationDisplay()) \(symbolForDyadic(op: op)) \(rhs?.getCalculationDisplay() ?? "")"
+           
+       case .functional(.reverseSign, let node):
+           return "-\(node.getCalculationDisplay())"
+           
+       case .functional(.percent, .numeral(let num)):
+           return "\(num)%"
+           
+       case .functional(.percent, let node):
+           return "\(node.getCalculationDisplay())%"
+           
+       case .result(let node):
+           if isRootNode {
+               return "\(node.getCalculationDisplay()) ="
+           } else {
+               return "(\(node.getCalculationDisplay()))"
+           }
+       }
+    }
+    
+    /**
+     Calculates what to display on input/output screen of the calculator.
+     - Parameter isRootNode: Should be true if the node is the root of the tree.
+     - Returns: `String` containing the value of the calculator calculation display.
+    */
+    func getLargeDisplayOutput(isRootNode: Bool = false) -> String {
+        switch self {
+            
+        case .numeral(let num):
+            return num
+            
+        case .dyadic(let lhs, _, .none):
+            return lhs.getCalculatedValueAsRoundedString()
+            
+        case .dyadic(_, _, .some(let rhs)):
+            return rhs.getLargeDisplayOutput()
+            
+        case .result(let node): return node.getCalculatedValueAsRoundedString()
+            
+        case .functional(_):
+            return self.getCalculatedValueAsRoundedString()
+
+        }
+    }
+    
+    
+    /**
+     Applies a calculator input to node.
+        - Parameter input: The input to the node.
+        - Returns: `CalculationNode` that has been updated with the input.
+     */
     func apply(input: CalculatorInput) -> CalculationNode {
         switch input {
         case .numeral(let numeral): return self.handle(numeral: numeral)
@@ -36,7 +141,14 @@ indirect enum CalculationNode {
         }
     }
     
-    func handle(numeral: String) -> CalculationNode {
+    // MARK: - Private functions
+    
+    /**
+     Helper method for applying a numeral input to the node.
+     - Parameter numeral: A numeral 0-9 or .
+     - Returns: `CalculationNode` that has been updated with the numeral.
+     */
+    private func handle(numeral: String) -> CalculationNode {
         switch self {
                 
         case .numeral(let existing):
@@ -66,15 +178,20 @@ indirect enum CalculationNode {
         case .functional(let op, let node):
             return CalculationNode.functional(op, node.handle(numeral: numeral))
         
-        case .result(let node):
+        case .result(_):
             return CalculationNode.numeral(numeral)
         }
     }
     
-    func handle(dyadic: DyadicOperator) -> CalculationNode {
+    /**
+     Helper method for applying a dyadic operator to a node.
+     - Parameter dyadic: A `DyadicOperator` to apply.
+     - Returns: `CalculationNode` that has been updated with the dyadic.
+     */
+    private func handle(dyadic: DyadicOperator) -> CalculationNode {
         switch self {
             
-        case .dyadic(let lhs, let op, .none):
+        case .dyadic(let lhs, _, .none):
             return .dyadic(lhs, dyadic, nil)
             
         case .dyadic(let ownLhs, let ownOp, .some(let ownRhs)):
@@ -82,6 +199,8 @@ indirect enum CalculationNode {
             let rhsHandled = ownRhs.handle(dyadic: dyadic)
             
             switch rhsHandled {
+                
+            // NOTE: We perform a rotation to maintain order of operations.
                 
             case .dyadic(let lhs, .plus, let rhs):
                 return .dyadic(.dyadic(ownLhs, ownOp, lhs), .plus, rhs)
@@ -98,7 +217,11 @@ indirect enum CalculationNode {
         }
     }
     
-    func handleReverseSign() -> CalculationNode {
+    /**
+     Helper method for applying the reverse sign function to a node.
+     - Returns: `CalculationNode` that has been updated with with the reverse sign function.
+     */
+    private func handleReverseSign() -> CalculationNode {
         
         switch self {
                 
@@ -120,7 +243,11 @@ indirect enum CalculationNode {
         }
     }
     
-    func handlePercent() -> CalculationNode {
+    /**
+     Helper method for applying the percent function to the node.
+     - Returns: `CalculationNode` that has been updated with with the percent function.
+     */
+    private func handlePercent() -> CalculationNode {
         
         switch self {
             
@@ -133,7 +260,12 @@ indirect enum CalculationNode {
     }
     
 
-    func isEquatable() -> Bool {
+    /**
+     Helper method for determining if the node can be evaluated in order to get a value.
+     - Returns: `Bool` that is `true` if the node can be reduced to a value, `false` otherwise.
+     - Note: An expression might not be evaluable if it's got a dyadic operator with a right child. We also assume that result notes, and functional nodes contain equatable nodes but in theory they might not (we can construct one manually for example, but not through use of the `apply(input:)` function.
+     */
+    private func isEquatable() -> Bool {
         switch self {
         case .numeral(_): return true
         case .result(_): return true
@@ -142,7 +274,11 @@ indirect enum CalculationNode {
         }
     }
     
-    func handleEquals() -> CalculationNode {
+    /**
+     Helper method for handling the equals input.
+     - Returns: `CalculationNode` that has been updated with with the equals operator.
+     */
+    private func handleEquals() -> CalculationNode {
         switch self {
         
         case .result(.dyadic(let lhs, let op, .some(let rhs))):
@@ -159,23 +295,19 @@ indirect enum CalculationNode {
             }
         }
     }
+
     
-    
-    func wouldClearOnClearPressed() -> Bool {
-        switch self {
-        case .result(_): return true
-        case .numeral(_): return true
-        default: return false
-        }
-    }
-    
-    func handleClear() -> CalculationNode {
+    /**
+     Helper method for handling the clear input.
+     - Returns: `CalculationNode` that has been updated with the clear input.
+     */
+    private func handleClear() -> CalculationNode {
         switch self {
             
         case .numeral(_):
             return .numeral("0")
             
-        case .dyadic(let lhs, let op, .none):
+        case .dyadic(let lhs, _, .none):
             return lhs
         
         case .dyadic(let lhs, let op, .some(let rhs)):
@@ -190,38 +322,13 @@ indirect enum CalculationNode {
         }
     }
     
-    func getCalculationDisplay(isRootNode: Bool = false) -> String {
-        
-        switch self {
-            
-        case .numeral("0"):
-            return isRootNode ? "" : "0"
-            
-        case .numeral(let num):
-            return num
-            
-        case .dyadic(let lhs, let op, let rhs):
-            return "\(lhs.getCalculationDisplay()) \(symbolForDyadic(op: op)) \(rhs?.getCalculationDisplay() ?? "")"
-            
-        case .functional(.reverseSign, let node):
-            return "-\(node.getCalculationDisplay())"
-            
-        case .functional(.percent, .numeral(let num)):
-            return "\(num)%"
-            
-        case .functional(.percent, let node):
-            return "\(node.getCalculationDisplay())%"
-            
-        case .result(let node):
-            if isRootNode {
-                return "\(node.getCalculationDisplay()) ="
-            } else {
-                return "(\(node.getCalculationDisplay()))"
-            }
-        }
-    }
     
-    func getCalculatedValueAsRoundedString() -> String {
+    /**
+        Calculates what to display on the calculation display of the calculator.
+        - Parameter isRootNode: Should be true if the node is the root of the tree.
+        - Returns: `String` containing the value of the calculator calculation display.
+     */
+    private func getCalculatedValueAsRoundedString() -> String {
         
         do {
             
@@ -250,7 +357,28 @@ indirect enum CalculationNode {
         }
     }
     
-    func getCalculatedValue() throws -> Double {
+    /**
+        Gets the displayed symbol for a dyadic operator.
+        - Parameter op: `DyadicOperator` that will be rendered.
+        - Returns: `String` representing the `DyadicOperator`.
+     */
+    private func symbolForDyadic(op: DyadicOperator) -> String {
+        switch op {
+        case .divide: return "÷"
+        case .minus: return "−"
+        case .multiply: return "×"
+        case .plus: return "+"
+        }
+    }
+    
+    
+    /**
+        Calculates the value of expression tree.
+        - Returns: `Double` containing the value of the expression tree.
+        - Throws: `CalculatorError.invalidInput` if there's an invalid value somewhere in the tree.
+        - Throws: `CalculatorError.divisionByZero` if a division by zero was attempted.
+     */
+    private func getCalculatedValue() throws -> Double {
         
         switch self {
         
@@ -313,40 +441,8 @@ indirect enum CalculationNode {
             
         }
     }
-    
-    func getLargeDisplayOutput(isRootNode: Bool = false) -> String {
-        switch self {
-            
-        case .numeral(let num):
-            return num
-            
-        case .dyadic(let lhs, _, .none):
-            return lhs.getCalculatedValueAsRoundedString()
-            
-        case .dyadic(let lhs, _, .some(let rhs)):
-            return rhs.getLargeDisplayOutput()
-            
-        case .result(let node): return node.getCalculatedValueAsRoundedString()
-            
-        case .functional(_):
-            return self.getCalculatedValueAsRoundedString()
 
-        }
-    }
-    
-    
-    
-    
-    func symbolForDyadic(op: DyadicOperator) -> String {
-        switch op {
-        case .divide: return "÷"
-        case .minus: return "−"
-        case .multiply: return "×"
-        case .plus: return "+"
-        }
-    }
-    
-    
+
 }
 
 
