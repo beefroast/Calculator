@@ -34,6 +34,24 @@ class CalculatorStateMachineTests: XCTestCase {
         XCTAssertEqual(state.updateState(input: .numeral("0")).display, "20")
     }
     
+    func testHugeNumber() {
+        XCTAssertEqual(state.updateState(input: .numeral("1")).display, "1")
+        XCTAssertEqual(state.updateState(input: .numeral("0")).display, "10")
+        XCTAssertEqual(state.updateState(input: .numeral("0")).display, "100")
+        XCTAssertEqual(state.updateState(input: .numeral("0")).display, "1000")
+        XCTAssertEqual(state.updateState(input: .numeral("0")).display, "10000")
+        XCTAssertEqual(state.updateState(input: .numeral("0")).display, "100000")
+        XCTAssertEqual(state.updateState(input: .numeral("0")).display, "1000000")
+        XCTAssertEqual(state.updateState(input: .numeral("0")).display, "10000000")
+        XCTAssertEqual(state.updateState(input: .numeral("0")).display, "100000000")
+        XCTAssertEqual(state.updateState(input: .numeral("0")).display, "1000000000")
+        XCTAssertEqual(state.updateState(input: .numeral("0")).display, "10000000000")
+        XCTAssertEqual(state.updateState(input: .numeral("0")).display, "100000000000")
+        XCTAssertEqual(state.updateState(input: .numeral("0")).display, "1000000000000")
+        XCTAssertEqual(state.updateState(input: .dyadic(.plus)).display, "1E12")
+        XCTAssertEqual(state.updateState(input: .clear).display, "1000000000000")
+    }
+    
     // MARK: - Decimal places
     
     func testDecimalPlace() {
